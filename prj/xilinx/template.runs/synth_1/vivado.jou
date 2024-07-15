@@ -2,11 +2,11 @@
 # Vivado v2018.3 (64-bit)
 # SW Build 2405991 on Thu Dec  6 23:38:27 MST 2018
 # IP Build 2404404 on Fri Dec  7 01:43:56 MST 2018
-# Start of session at: Mon Jul  8 19:23:09 2024
-# Process ID: 27732
+# Start of session at: Mon Jul 15 19:28:47 2024
+# Process ID: 7076
 # Current directory: f:/FPGA_Project/IP_lib/prj/xilinx/template.runs/synth_1
-# Command line: vivado.exe -log async_fifo.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source async_fifo.tcl
-# Log file: f:/FPGA_Project/IP_lib/prj/xilinx/template.runs/synth_1/async_fifo.vds
+# Command line: vivado.exe -log sync_fifo.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source sync_fifo.tcl
+# Log file: f:/FPGA_Project/IP_lib/prj/xilinx/template.runs/synth_1/sync_fifo.vds
 # Journal file: f:/FPGA_Project/IP_lib/prj/xilinx/template.runs/synth_1\vivado.jou
 #-----------------------------------------------------------
-source async_fifo.tcl -notrace
+source sync_fifo.tcl -notrace

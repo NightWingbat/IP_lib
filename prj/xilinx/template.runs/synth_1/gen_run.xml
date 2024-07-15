@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7a35tcsg324-1" LaunchTime="1720437788">
-  <File Type="PA-TCL" Name="async_fifo.tcl"/>
-  <File Type="REPORTS-TCL" Name="async_fifo_reports.tcl"/>
-  <File Type="RDS-RDS" Name="async_fifo.vds"/>
-  <File Type="RDS-UTIL" Name="async_fifo_utilization_synth.rpt"/>
-  <File Type="RDS-UTIL-PB" Name="async_fifo_utilization_synth.pb"/>
-  <File Type="RDS-DCP" Name="async_fifo.dcp"/>
+<GenRun Id="synth_1" LaunchPart="xc7a35tcsg324-1" LaunchTime="1721042925">
+  <File Type="PA-TCL" Name="sync_fifo.tcl"/>
+  <File Type="RDS-PROPCONSTRS" Name="sync_fifo_drc_synth.rpt"/>
+  <File Type="REPORTS-TCL" Name="sync_fifo_reports.tcl"/>
+  <File Type="RDS-RDS" Name="sync_fifo.vds"/>
+  <File Type="RDS-UTIL" Name="sync_fifo_utilization_synth.rpt"/>
+  <File Type="RDS-UTIL-PB" Name="sync_fifo_utilization_synth.pb"/>
+  <File Type="RDS-DCP" Name="sync_fifo.dcp"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="sync_fifo_timing_summary_synth.rpt"/>
+  <File Type="VDS-TIMING-PB" Name="sync_fifo_timing_summary_synth.pb"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PPRDIR/../../user/src/memory/FIFO/DPRAM.v">
@@ -15,7 +18,7 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PPRDIR/../../user/src/memory/FIFO/async_fifo.v">
+    <File Path="$PPRDIR/../../user/src/memory/FIFO/sync_fifo.v">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>
@@ -30,10 +33,17 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
+    <File Path="$PPRDIR/../../user/src/memory/FIFO/async_fifo.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
     <Config>
       <Option Name="DesignMode" Val="RTL"/>
-      <Option Name="TopModule" Val="async_fifo"/>
-      <Option Name="TopAutoSet" Val="TRUE"/>
+      <Option Name="TopModule" Val="sync_fifo"/>
     </Config>
   </FileSet>
   <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">

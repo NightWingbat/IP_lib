@@ -31,7 +31,7 @@ set_property ip_output_repo f:/FPGA_Project/IP_lib/prj/xilinx/template.cache/ip 
 set_property ip_cache_permissions {read write} [current_project]
 read_verilog -library xil_defaultlib {
   f:/FPGA_Project/IP_lib/user/src/memory/FIFO/DPRAM.v
-  f:/FPGA_Project/IP_lib/user/src/memory/FIFO/async_fifo.v
+  f:/FPGA_Project/IP_lib/user/src/memory/FIFO/sync_fifo.v
 }
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the
@@ -44,12 +44,12 @@ foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
 set_param ips.enableIPCacheLiteLoad 1
 close [open __synthesis_is_running__ w]
 
-synth_design -top async_fifo -part xc7a35tcsg324-1
+synth_design -top sync_fifo -part xc7a35tcsg324-1
 
 
 # disable binary constraint mode for synth run checkpoints
 set_param constraints.enableBinaryConstraints false
-write_checkpoint -force -noxdef async_fifo.dcp
-create_report "synth_1_synth_report_utilization_0" "report_utilization -file async_fifo_utilization_synth.rpt -pb async_fifo_utilization_synth.pb"
+write_checkpoint -force -noxdef sync_fifo.dcp
+create_report "synth_1_synth_report_utilization_0" "report_utilization -file sync_fifo_utilization_synth.rpt -pb sync_fifo_utilization_synth.pb"
 file delete __synthesis_is_running__
 close [open __synthesis_is_complete__ w]

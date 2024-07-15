@@ -40,4 +40,4 @@ EAStep()
      fi
 }
 
-EAStep vivado -log async_fifo.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source async_fifo.tcl
+EAStep vivado -log sync_fifo.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source sync_fifo.tcl
