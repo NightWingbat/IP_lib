@@ -112,18 +112,13 @@ generate for(i = 0 ; i < DIVIDEND_WIDTH; i = i + 1) begin : recovery_remainder
         if(sys_rst == 1'b0)begin
             quotient_d1[i+1]        <= 1'b0;
         end
-        else if(valid_in[i+1])begin
-            if(remainder_shift[i] >= divisor_in[i])begin
-                quotient_d1[i+1]    <= quotient_d1[i] << 1;
-                quotient_d1[i+1][0] <= 1'b1;
-            end
-            else begin
-                quotient_d1[i+1]    <= quotient_d1[i] << 1;
-                quotient_d1[i+1][0] <= 1'b0;
-            end
+        else if(remainder_shift[i] >= divisor_in[i])begin
+            quotient_d1[i+1]    <= quotient_d1[i] << 1;
+            quotient_d1[i+1][0] <= 1'b1;
         end
         else begin
-            quotient_d1[i+1]        <= quotient_d1[i+1];
+            quotient_d1[i+1]    <= quotient_d1[i] << 1;
+            quotient_d1[i+1][0] <= 1'b0;
         end
     end
 

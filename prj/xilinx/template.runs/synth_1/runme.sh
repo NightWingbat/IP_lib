@@ -40,4 +40,4 @@ EAStep()
      fi
 }
 
-EAStep vivado -log divider.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source divider.tcl
+EAStep vivado -log async_fifo.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source async_fifo.tcl

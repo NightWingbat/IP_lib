@@ -1,0 +1,254 @@
+# //  ModelSim SE-64 2020.4 Oct 13 2020
+# //
+# //  Copyright 1991-2020 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  ModelSim SE-64 and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# do cmd.do
+# tb_async_fifo
+# SIM
+# EFX_IPM
+# ** Warning: (vlib-34) Library already exists at "work".
+# Errors: 0, Warnings: 1
+# Model Technology ModelSim SE-64 vmap 2020.4 Lib Mapping Utility 2020.10 Oct 13 2020
+# vmap work work 
+# Modifying modelsim.ini
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 19:03:04 on Jul 15,2024
+# vlog -reportprogress 300 F:/FPGA_Project/IP_lib/user/sim/tb_sync_fifo.v 
+# -- Compiling module tb_sync_fifo
+# 
+# Top level modules:
+# 	tb_sync_fifo
+# End time: 19:03:04 on Jul 15,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 19:03:04 on Jul 15,2024
+# vlog -reportprogress 300 F:/FPGA_Project/IP_lib/user/src/memory/FIFO/sync_fifo.v 
+# -- Compiling module sync_fifo
+# 
+# Top level modules:
+# 	sync_fifo
+# End time: 19:03:04 on Jul 15,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 19:03:04 on Jul 15,2024
+# vlog -reportprogress 300 F:/FPGA_Project/IP_lib/user/src/memory/FIFO/DPRAM.v 
+# -- Compiling module DPRAM
+# 
+# Top level modules:
+# 	DPRAM
+# End time: 19:03:04 on Jul 15,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vsim work.tb_async_fifo 
+# Start time: 19:03:04 on Jul 15,2024
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# Loading sv_std.std
+# Loading work.tb_async_fifo(fast)
+# Loading work.async_fifo(fast)
+# ** UI-Msg: (vish-4014) No objects found matching '/tb_sync_fifo/sys_clk'.
+# Error in macro ./cmd.do line 22
+# ** UI-Msg: (vish-4014) No objects found matching '/tb_sync_fifo/sys_clk'.
+#     while executing
+# "add wave sim:/tb_sync_fifo/sys_clk"
+vsim work.tb_sync_fifo -voptargs=+acc
+# End time: 19:03:17 on Jul 15,2024, Elapsed time: 0:00:13
+# Errors: 0, Warnings: 0
+# vsim work.tb_sync_fifo -voptargs="+acc" 
+# Start time: 19:03:17 on Jul 15,2024
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# Loading work.tb_sync_fifo(fast)
+# Loading work.sync_fifo(fast)
+# Loading work.DPRAM(fast)
+add wave -position insertpoint  \
+sim:/tb_sync_fifo/sys_clk \
+sim:/tb_sync_fifo/sys_rst \
+sim:/tb_sync_fifo/valid \
+sim:/tb_sync_fifo/dout \
+sim:/tb_sync_fifo/full \
+sim:/tb_sync_fifo/empty \
+sim:/tb_sync_fifo/wr_data_count \
+sim:/tb_sync_fifo/rd_data_count \
+sim:/tb_sync_fifo/wr_en \
+sim:/tb_sync_fifo/rd_en \
+sim:/tb_sync_fifo/din
+run 4us
+# the write data is 0123	 the write_count is   0
+# the write data is 0224	 the write_count is   1
+# the write data is 0325	 the write_count is   2
+# the write data is 0426	 the write_count is   3
+# the write data is 0527	 the write_count is   4
+# the write data is 0628	 the write_count is   5
+# the write data is 0729	 the write_count is   6
+# the write data is 082a	 the write_count is   7
+# the write data is 092b	 the write_count is   8
+# the write data is 0a2c	 the write_count is   9
+# the write data is 0b2d	 the write_count is  10
+# the write data is 0c2e	 the write_count is  11
+# the write data is 0d2f	 the write_count is  12
+# the write data is 0e30	 the write_count is  13
+# the write data is 0f31	 the write_count is  14
+# the write data is 1032	 the write_count is  15
+# the write data is 1133	 the write_count is  16
+# the write data is 1234	 the write_count is  17
+# the write data is 1335	 the write_count is  18
+# the write data is 1436	 the write_count is  19
+# the write data is 1537	 the write_count is  20
+# the write data is 1638	 the write_count is  21
+# the write data is 1739	 the write_count is  22
+# the write data is 183a	 the write_count is  23
+# the write data is 193b	 the write_count is  24
+# the write data is 1a3c	 the write_count is  25
+# the write data is 1b3d	 the write_count is  26
+# the write data is 1c3e	 the write_count is  27
+# the write data is 1d3f	 the write_count is  28
+# the write data is 1e40	 the write_count is  29
+# the write data is 1f41	 the write_count is  30
+# the write data is 2042	 the write_count is  31
+# the write data is 2143	 the write_count is  32
+# the write data is 2244	 the write_count is  33
+# the write data is 2345	 the write_count is  34
+# the write data is 2446	 the write_count is  35
+# the write data is 2547	 the write_count is  36
+# the write data is 2648	 the write_count is  37
+# the write data is 2749	 the write_count is  38
+# the write data is 284a	 the write_count is  39
+# the write data is 294b	 the write_count is  40
+# the write data is 2a4c	 the write_count is  41
+# the write data is 2b4d	 the write_count is  42
+# the write data is 2c4e	 the write_count is  43
+# the write data is 2d4f	 the write_count is  44
+# the write data is 2e50	 the write_count is  45
+# the write data is 2f51	 the write_count is  46
+# the write data is 3052	 the write_count is  47
+# the write data is 3153	 the write_count is  48
+# the write data is 3254	 the write_count is  49
+# the write data is 3355	 the write_count is  50
+# the write data is 3456	 the write_count is  51
+# the write data is 3557	 the write_count is  52
+# the write data is 3658	 the write_count is  53
+# the write data is 3759	 the write_count is  54
+# the write data is 385a	 the write_count is  55
+# the write data is 395b	 the write_count is  56
+# the write data is 3a5c	 the write_count is  57
+# the write data is 3b5d	 the write_count is  58
+# the write data is 3c5e	 the write_count is  59
+# the write data is 3d5f	 the write_count is  60
+# the write data is 3e60	 the write_count is  61
+# the write data is 3f61	 the write_count is  62
+# the write data is 4062	 the write_count is  63
+# the write data is 4163	 the write_count is  64
+# the write data is 4264	 the write_count is  65
+# the write data is 4365	 the write_count is  66
+# the write data is 4466	 the write_count is  67
+# the write data is 4567	 the write_count is  68
+# the write data is 4668	 the write_count is  69
+# the write data is 4769	 the write_count is  70
+# the write data is 486a	 the write_count is  71
+# the write data is 496b	 the write_count is  72
+# the write data is 4a6c	 the write_count is  73
+# the write data is 4b6d	 the write_count is  74
+# the write data is 4c6e	 the write_count is  75
+# the write data is 4d6f	 the write_count is  76
+# the write data is 4e70	 the write_count is  77
+# the write data is 4f71	 the write_count is  78
+# the write data is 5072	 the write_count is  79
+# the write data is 5173	 the write_count is  80
+# the write data is 5274	 the write_count is  81
+# the write data is 5375	 the write_count is  82
+# the write data is 5476	 the write_count is  83
+# the write data is 5577	 the write_count is  84
+# the write data is 5678	 the write_count is  85
+# the write data is 5779	 the write_count is  86
+# the write data is 587a	 the write_count is  87
+# the write data is 597b	 the write_count is  88
+# the write data is 5a7c	 the write_count is  89
+# the write data is 5b7d	 the write_count is  90
+# the write data is 5c7e	 the write_count is  91
+# the write data is 5d7f	 the write_count is  92
+# the write data is 5e80	 the write_count is  93
+# the write data is 5f81	 the write_count is  94
+# the write data is 6082	 the write_count is  95
+# the write data is 6183	 the write_count is  96
+# the write data is 6284	 the write_count is  97
+# the write data is 6385	 the write_count is  98
+# the write data is 6486	 the write_count is  99
+# the write data is 6587	 the write_count is 100
+# the write data is 6688	 the write_count is 101
+# the write data is 6789	 the write_count is 102
+# the write data is 688a	 the write_count is 103
+# the write data is 698b	 the write_count is 104
+# the write data is 6a8c	 the write_count is 105
+# the write data is 6b8d	 the write_count is 106
+# the write data is 6c8e	 the write_count is 107
+# the write data is 6d8f	 the write_count is 108
+# the write data is 6e90	 the write_count is 109
+# the write data is 6f91	 the write_count is 110
+# the write data is 7092	 the write_count is 111
+# the write data is 7193	 the write_count is 112
+# the write data is 7294	 the write_count is 113
+# the write data is 7395	 the write_count is 114
+# the write data is 7496	 the write_count is 115
+# the write data is 7597	 the write_count is 116
+# the write data is 7698	 the write_count is 117
+# the write data is 7799	 the write_count is 118
+# the write data is 789a	 the write_count is 119
+# the write data is 799b	 the write_count is 120
+# the write data is 7a9c	 the write_count is 121
+# the write data is 7b9d	 the write_count is 122
+# the write data is 7c9e	 the write_count is 123
+# the write data is 7d9f	 the write_count is 124
+# the write data is 7ea0	 the write_count is 125
+# the write data is 7fa1	 the write_count is 126
+# the write data is 80a2	 the write_count is 127
+# the write data is 81a3	 the write_count is 128
+# the write data is 82a4	 the write_count is 128
+# the write data is 83a5	 the write_count is 128
+# the write data is 84a6	 the write_count is 128
+# the write data is 85a7	 the write_count is 128
+# the write data is 86a8	 the write_count is 128
+# the write data is 87a9	 the write_count is 128
+# the write data is 88aa	 the write_count is 128
+# the write data is 89ab	 the write_count is 128
+# the write data is 8aac	 the write_count is 128
+# the write data is 8bad	 the write_count is 128
+# the write data is 8cae	 the write_count is 128
+# the write data is 8daf	 the write_count is 128
+# the write data is 8eb0	 the write_count is 128
+# the write data is 8fb1	 the write_count is 128
+# the write data is 90b2	 the write_count is 128
+# the write data is 91b3	 the write_count is 128
+# the write data is 92b4	 the write_count is 128
+# the write data is 93b5	 the write_count is 128
+# the write data is 94b6	 the write_count is 128
+# the write data is 95b7	 the write_count is 128
+# the write data is 96b8	 the write_count is 128
+# the write data is 97b9	 the write_count is 128
+# the write data is 98ba	 the write_count is 128
+# the write data is 99bb	 the write_count is 128
+# the write data is 9abc	 the write_count is 128
+# the read data is 082a0729062805270426032502240123	 the read_count is 16
+# the read data is 10320f310e300d2f0c2e0b2d0a2c092b	 the read_count is 15
+# the read data is 183a1739163815371436133512341133	 the read_count is 14
+# the read data is 20421f411e401d3f1c3e1b3d1a3c193b	 the read_count is 13
+# the read data is 284a2749264825472446234522442143	 the read_count is 12
+# the read data is 30522f512e502d4f2c4e2b4d2a4c294b	 the read_count is 11
+# the read data is 385a3759365835573456335532543153	 the read_count is 10
+# the read data is 40623f613e603d5f3c5e3b5d3a5c395b	 the read_count is  9
+# the read data is 486a4769466845674466436542644163	 the read_count is  8
+# the read data is 50724f714e704d6f4c6e4b6d4a6c496b	 the read_count is  7
+# the read data is 587a5779567855775476537552745173	 the read_count is  6
+# the read data is 60825f815e805d7f5c7e5b7d5a7c597b	 the read_count is  5
+# the read data is 688a6789668865876486638562846183	 the read_count is  4
+# the read data is 70926f916e906d8f6c8e6b8d6a8c698b	 the read_count is  3
+# the read data is 789a7799769875977496739572947193	 the read_count is  2
+# the read data is 80a27fa17ea07d9f7c9e7b9d7a9c799b	 the read_count is  1
+# End time: 19:03:47 on Jul 15,2024, Elapsed time: 0:00:30
+# Errors: 0, Warnings: 0
