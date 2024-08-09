@@ -2,18 +2,18 @@
 
 module tb_sync_fifo();
 
-parameter    INPUT_WIDTH  = 16;
-parameter    OUTPUT_WIDTH = 128;
+parameter    INPUT_WIDTH  = 64;
+parameter    OUTPUT_WIDTH = 8;
 /*
 	The depth parameter of writing mem
 	if INPUT_WIDTH < OUTPUT_WIDTH, WR_DEPTH = (OUTPUT_WIDTH/INPUT_WIDTH) * RD_DEPTH
 */
-parameter    WR_DEPTH     = 128;
+parameter    WR_DEPTH     = 16;
 /*
 	The depth parameter of reading mem
 	if INPUT_WIDTH > OUTPUT_WIDTH, RD_DEPTH = (INPUT_WIDTH/OUTPUT_WIDTH) * WR_DEPTH
 */
-parameter    RD_DEPTH     = 16;
+parameter    RD_DEPTH     = 128;
 //The parameter of reading method
 parameter    MODE         = "FWFT";
 //Is data stored from high bits or from low bits
@@ -39,6 +39,8 @@ wire                      	full;
 wire                      	empty;
 wire [$clog2(WR_DEPTH):0] 	wr_data_count;
 wire [$clog2(RD_DEPTH):0] 	rd_data_count;
+wire [$clog2(WR_DEPTH):0] 	wr_data_space;
+wire [$clog2(RD_DEPTH):0] 	rd_data_space;
 
 reg							wr_en;
 reg							rd_en;
@@ -59,17 +61,17 @@ end
 
 always @(posedge sys_clk or negedge sys_rst) begin
 	if(sys_rst == 1'b0)begin
-		din <= 16'h0123;
+		din <= 64'h0123_4567_89ab_cdef;
 	end
 	else if(wr_en)begin
 		din[7:0]   <= din[7:0]   + 1'b1;
 		din[15:8]  <= din[15:8]  + 1'b1;
-		//din[23:16] <= din[23:16] + 1'b1;
-		//din[31:24] <= din[31:24] + 1'b1;
-		//din[39:32] <= din[39:32] + 1'b1;
-		//din[47:40] <= din[47:40] + 1'b1;
-		//din[55:48] <= din[55:48] + 1'b1;
-		//din[63:56] <= din[63:56] + 1'b1;
+		din[23:16] <= din[23:16] + 1'b1;
+		din[31:24] <= din[31:24] + 1'b1;
+		din[39:32] <= din[39:32] + 1'b1;
+		din[47:40] <= din[47:40] + 1'b1;
+		din[55:48] <= din[55:48] + 1'b1;
+		din[63:56] <= din[63:56] + 1'b1;
 	end
 end
 
@@ -92,7 +94,7 @@ sync_fifo #(
 	.DIRECTION    	( DIRECTION	     ))
 u_sync_fifo(
 	.sys_clk       	( sys_clk        ),
-	.sys_rst       	( sys_rst        ),
+	.rst       		( sys_rst        ),
 	.wr_en         	( wr_en          ),
 	.din           	( din            ),
 	.rd_en         	( rd_en          ),
@@ -101,7 +103,9 @@ u_sync_fifo(
 	.full          	( full           ),
 	.empty         	( empty          ),
 	.wr_data_count 	( wr_data_count  ),
-	.rd_data_count 	( rd_data_count  )
+	.rd_data_count 	( rd_data_count  ),
+	.wr_data_space  ( wr_data_space  ),
+	.rd_data_space  ( rd_data_space  )
 );
 
 initial begin            

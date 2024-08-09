@@ -10,109 +10,109 @@ z2
 cModel Technology
 Z0 dF:/FPGA_Project/IP_lib/user/sim
 T_opt
-!s110 1721032203
-VPQgU3IcN8AYi6]10]ZTPP0
-04 13 4 work tb_async_fifo fast 0
-=1-d4e98a6083c1-6694de0a-35d-2f88
-o-quiet -auto_acc_if_foreign -work work
-Z1 tCvgOpt 0
+!s110 1722136853
+VcNVij<GT>:kg61oAPD][W0
+Z1 04 13 4 work tb_async_fifo fast 0
+=1-d4e98a6083c1-66a5b914-2ec-81ec
+Z2 o-quiet -auto_acc_if_foreign -work work +acc
+Z3 tCvgOpt 0
 n@_opt
-Z2 OL;O;2020.4;71
+Z4 OL;O;2020.4;71
 R0
 T_opt1
-!s110 1721041398
-VJk@7_gc1;jH69ZUUUI5XY1
-04 12 4 work tb_sync_fifo fast 0
-=1-d4e98a6083c1-669501f5-384-6ec0
-Z3 o-quiet -auto_acc_if_foreign -work work +acc
+!s110 1723217066
+VjeM@i]C1;gHNe;mIQD;1h1
 R1
-n@_opt1
+=1-d4e98a6083c1-66b634a9-345-66b0
 R2
+R3
+n@_opt1
+R4
 R0
 T_opt2
-!s110 1721051835
-V<5ZoXVXTSO0LojV>PDada3
-04 9 4 work testbench fast 0
-=1-d4e98a6083c1-66952abb-189-1c74
-R3
-R1
-n@_opt2
+!s110 1723218634
+V_FkHXLdD_EcNf_oRbOzCW1
+04 12 4 work tb_sync_fifo fast 0
+=1-d4e98a6083c1-66b63aca-f7-5430
 R2
+R3
+n@_opt2
+R4
 vasync_fifo
-!s110 1721032202
+Z5 !s110 1723212624
 !i10b 1
-!s100 >QcOdZ4BfbE0gEIoh<E5o1
-Z4 !s11b Dg1SIo80bB@j0V0VzS_@n1
-IU2:5im]:6U7`Qad916a6]1
+!s100 1W=nF51XlZLB[Z]fZ2NeE0
+Z6 !s11b Dg1SIo80bB@j0V0VzS_@n1
+I`2gzAN>>ihFAO@a?=IMd73
 R0
-w1721032122
-8F:/FPGA_Project/IP_lib/user/src/memory/FIFO/async_fifo.v
-FF:/FPGA_Project/IP_lib/user/src/memory/FIFO/async_fifo.v
-!i122 89
-L0 42 584
-Z5 VDg1SIo80bB@j0V0VzS_@n1
-Z6 OL;L;2020.4;71
+w1723212612
+8../src/memory/FIFO/async_fifo.v
+F../src/memory/FIFO/async_fifo.v
+!i122 417
+L0 42 799
+Z7 VDg1SIo80bB@j0V0VzS_@n1
+Z8 OL;L;2020.4;71
 r1
 !s85 0
 31
-!s108 1721032202.000000
-!s107 F:/FPGA_Project/IP_lib/user/src/memory/FIFO/async_fifo.v|
-!s90 -reportprogress|300|F:/FPGA_Project/IP_lib/user/src/memory/FIFO/async_fifo.v|
+Z9 !s108 1723212624.000000
+!s107 ../src/memory/FIFO/async_fifo.v|
+!s90 -reportprogress|300|-work|work|../src/memory/FIFO/async_fifo.v|
 !i113 0
-Z7 o-L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
-R1
+Z10 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R3
 vDPRAM
-Z8 !s110 1721051821
+Z11 !s110 1723218633
 !i10b 1
 !s100 lQ4JTM0@WSYRX?7KoQ1K`2
-R4
-I;?9<WaG<2R]zB[_H3CC6l0
+R6
+I]oHFDHmG[abA;9PhDKR_E1
 R0
 w1719922286
-8F:/FPGA_Project/IP_lib/user/src/memory/FIFO/DPRAM.v
-FF:/FPGA_Project/IP_lib/user/src/memory/FIFO/DPRAM.v
-!i122 141
+8../src/memory/FIFO/DPRAM.v
+F../src/memory/FIFO/DPRAM.v
+!i122 463
 L0 41 62
-R5
-R6
+R7
+R8
 r1
 !s85 0
 31
-Z9 !s108 1721051821.000000
-!s107 F:/FPGA_Project/IP_lib/user/src/memory/FIFO/DPRAM.v|
-!s90 -reportprogress|300|F:/FPGA_Project/IP_lib/user/src/memory/FIFO/DPRAM.v|
+Z12 !s108 1723218633.000000
+!s107 ../src/memory/FIFO/DPRAM.v|
+!s90 -reportprogress|300|-work|work|../src/memory/FIFO/DPRAM.v|
 !i113 0
-R7
-R1
+R10
+R3
 n@d@p@r@a@m
 vsync_fifo
-Z10 !s110 1721041384
+R11
 !i10b 1
-!s100 P`V1?zLNcTcWUAh1dW=SR2
-R4
-I0@_1AFJ8>;FAazVFz@f_T2
-R0
-w1721037578
-8F:/FPGA_Project/IP_lib/user/src/memory/FIFO/sync_fifo.v
-FF:/FPGA_Project/IP_lib/user/src/memory/FIFO/sync_fifo.v
-!i122 125
-L0 42 510
-R5
+!s100 6O6cZ3QDX8UR;d>cV6[gT2
 R6
+Idn=5bXgO?3@LQbXQDf7dg3
+R0
+w1723218356
+8../src/memory/FIFO/sync_fifo.v
+F../src/memory/FIFO/sync_fifo.v
+!i122 462
+L0 42 733
+R7
+R8
 r1
 !s85 0
 31
-Z11 !s108 1721041384.000000
-!s107 F:/FPGA_Project/IP_lib/user/src/memory/FIFO/sync_fifo.v|
-!s90 -reportprogress|300|F:/FPGA_Project/IP_lib/user/src/memory/FIFO/sync_fifo.v|
+R12
+!s107 ../src/memory/FIFO/sync_fifo.v|
+!s90 -reportprogress|300|-work|work|../src/memory/FIFO/sync_fifo.v|
 !i113 0
-R7
-R1
+R10
+R3
 vsync_fifo_test
-R8
+Z13 !s110 1721051821
 !i10b 1
 !s100 3ecKU@o_d3SI;Jj:aZZla1
-R4
+R6
 IUm]=>K8UI30cd`>Df=^L<2
 R0
 w1721051363
@@ -120,85 +120,83 @@ w1721051363
 FF:/FPGA_Project/IP_lib/user/src/memory/sync_fifo_test.v
 !i122 140
 L0 3 201
+R7
+R8
+r1
+!s85 0
+31
+Z14 !s108 1721051821.000000
+!s107 F:/FPGA_Project/IP_lib/user/src/memory/sync_fifo_test.v|
+!s90 -reportprogress|300|F:/FPGA_Project/IP_lib/user/src/memory/sync_fifo_test.v|
+!i113 0
+Z15 o-L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R3
+vtb_async_fifo
 R5
+!i10b 1
+!s100 dV^bCDTB_zaCh3nG^cXWk2
 R6
+Id9CJZ80hCU<=b=P1OT=EX1
+R0
+w1723209289
+8../sim/tb_async_fifo.v
+F../sim/tb_async_fifo.v
+!i122 416
+L0 3 136
+R7
+R8
 r1
 !s85 0
 31
 R9
-!s107 F:/FPGA_Project/IP_lib/user/src/memory/sync_fifo_test.v|
-!s90 -reportprogress|300|F:/FPGA_Project/IP_lib/user/src/memory/sync_fifo_test.v|
+!s107 ../sim/tb_async_fifo.v|
+!s90 -reportprogress|300|-work|work|../sim/tb_async_fifo.v|
 !i113 0
-R7
-R1
-vtb_async_fifo
-DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
-!s110 1720860525
-!i10b 1
-!s100 Eo`65Zl1mE7aR0]9hXjXc0
-R4
-I1O:3g@0:W<l8j4cOI^@mb3
-S1
-R0
-w1720859525
-8F:/FPGA_Project/IP_lib/user/sim/tb_async_fifo.sv
-FF:/FPGA_Project/IP_lib/user/sim/tb_async_fifo.sv
-!i122 24
-L0 3 219
-R5
-R6
-r1
-!s85 0
-31
-!s108 1720860525.000000
-!s107 F:/FPGA_Project/IP_lib/user/sim/tb_async_fifo.sv|
-!s90 -reportprogress|300|F:/FPGA_Project/IP_lib/user/sim/tb_async_fifo.sv|
-!i113 0
-R7
-R1
-vtb_sync_fifo
 R10
+R3
+vtb_sync_fifo
+R11
 !i10b 1
-!s100 M;R]BEXZ@9X3NgO7`z>?b1
-R4
-Ie_[^UkVcdZU9VRn<Ni7Kb0
-R0
-w1721041375
-8F:/FPGA_Project/IP_lib/user/sim/tb_sync_fifo.v
-FF:/FPGA_Project/IP_lib/user/sim/tb_sync_fifo.v
-!i122 124
-L0 3 111
-R5
+!s100 oPcCeCbOm3S@>NjM;4SVB2
 R6
+IIbml7VWDYlzB>bm>TW?NS1
+R0
+w1723218624
+8../sim/tb_sync_fifo.v
+F../sim/tb_sync_fifo.v
+!i122 461
+Z16 L0 3 115
+R7
+R8
 r1
 !s85 0
 31
-R11
-!s107 F:/FPGA_Project/IP_lib/user/sim/tb_sync_fifo.v|
-!s90 -reportprogress|300|F:/FPGA_Project/IP_lib/user/sim/tb_sync_fifo.v|
+R12
+!s107 ../sim/tb_sync_fifo.v|
+!s90 -reportprogress|300|-work|work|../sim/tb_sync_fifo.v|
 !i113 0
-R7
-R1
+R10
+R3
 vtestbench
-R8
+R13
 !i10b 1
 !s100 3n_S69jml?dUcPZho2eS^2
-R4
+R6
 I9lGjY_@HW?^o1hLQRG?VD2
 R0
 w1721051812
 8F:/FPGA_Project/IP_lib/user/sim/testbench.v
 FF:/FPGA_Project/IP_lib/user/sim/testbench.v
 !i122 139
-L0 3 115
-R5
-R6
+R16
+R7
+R8
 r1
 !s85 0
 31
-R9
+R14
 !s107 F:/FPGA_Project/IP_lib/user/sim/testbench.v|
 !s90 -reportprogress|300|F:/FPGA_Project/IP_lib/user/sim/testbench.v|
 !i113 0
-R7
-R1
+R15
+R3
