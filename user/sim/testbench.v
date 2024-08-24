@@ -51,10 +51,10 @@ reg                 o_tready;
         i_tvalid = 0;
 
         // Assert clear signal
-        @(negedge sys_clk);
-        clear = 1;
-        @(negedge sys_clk);
-        clear = 0;
+        // @(negedge sys_clk);
+        // clear = 1;
+        // @(negedge sys_clk);
+        // clear = 0;
 
         // Check FIFO status after clear
         @(negedge sys_clk);
