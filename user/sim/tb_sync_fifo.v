@@ -68,6 +68,18 @@ initial begin
 	wr_en = 1'b0;
 	rd_en = 1'b1;
 
+	#30
+
+	@(posedge sys_clk);
+	wr_en = 1'b0;
+	rd_en = 1'b0;
+
+	#215
+
+	@(posedge sys_clk);
+	wr_en = 1'b0;
+	rd_en = 1'b1;
+
 	#(RD_DEPTH * 22)
 
 	@(posedge sys_clk);
@@ -92,7 +104,7 @@ always @(posedge sys_clk or negedge sys_rst) begin
 end
 
 always @(posedge sys_clk) begin
-	if(wr_en)
+	if(wr_en & (~full))
 		$display("the write data is %h\t the write_count is %d",din,wr_data_count);
 end
 
