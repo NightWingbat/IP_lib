@@ -3,7 +3,7 @@
 module testbench();
 
 parameter WIDTH=32;
-parameter DEPTH=1<<9;
+parameter DEPTH=1<<4;
 
 parameter MAIN_FRE   = 100; //unit MHz
 reg                   sys_clk = 0;
@@ -48,6 +48,48 @@ reg                 o_tready;
         i_tdata = 32'h12345678;
         i_tvalid = 1;
         @(negedge sys_clk);
+        i_tdata = 32'h89abcdef;
+        i_tvalid = 1;
+        @(negedge sys_clk);
+        i_tdata = 32'h89abcdef;
+        i_tvalid = 1;
+        @(negedge sys_clk);
+        i_tdata = 32'h89abcdef;
+        i_tvalid = 1;
+        @(negedge sys_clk);
+        i_tdata = 32'h89abcdef;
+        i_tvalid = 1;
+        @(negedge sys_clk);
+        i_tdata = 32'h89abcdef;
+        i_tvalid = 1;
+        @(negedge sys_clk);
+        i_tdata = 32'h89abcdef;
+        i_tvalid = 1;
+        @(negedge sys_clk);
+        i_tdata = 32'h89abcdef;
+        i_tvalid = 1;
+        @(negedge sys_clk);
+        i_tdata = 32'h89abcdef;
+        i_tvalid = 1;
+        @(negedge sys_clk);
+        i_tdata = 32'h89abcdef;
+        i_tvalid = 1;
+        @(negedge sys_clk);
+        i_tdata = 32'h89abcdef;
+        i_tvalid = 1;
+        @(negedge sys_clk);
+        i_tdata = 32'h89abcdef;
+        i_tvalid = 1;
+        @(negedge sys_clk);
+        i_tdata = 32'h89abcdef;
+        i_tvalid = 1;
+        @(negedge sys_clk);
+        i_tdata = 32'h89abcdef;
+        i_tvalid = 1;
+        @(negedge sys_clk);
+        i_tdata = 32'h89abcdef;
+        i_tvalid = 1;
+        @(negedge sys_clk);
         i_tvalid = 0;
 
         // Assert clear signal
@@ -57,32 +99,32 @@ reg                 o_tready;
         // clear = 0;
 
         // Check FIFO status after clear
-        @(negedge sys_clk);
-        o_tready = 1;
-        @(posedge o_tvalid);
-        @(negedge sys_clk);
-        o_tready = 0;
+        // @(negedge sys_clk);
+        // o_tready = 1;
+        // @(posedge o_tvalid);
+        // @(negedge sys_clk);
+        // o_tready = 0;
 
         // Wait a few cycles
-        #50;
+        // #50;
 
         // Write data to the FIFO again
-        @(negedge sys_clk);
-        i_tdata = 32'hDEADBEEF;
-        i_tvalid = 1;
-        @(negedge sys_clk);
-        i_tvalid = 0;
+        // @(negedge sys_clk);
+        // i_tdata = 32'hDEADBEEF;
+        // i_tvalid = 1;
+        // @(negedge sys_clk);
+        // i_tvalid = 0;
 
         // Read data from the FIFO
-        @(negedge sys_clk);
-        o_tready = 1;
-        @(posedge o_tvalid);
-        @(negedge sys_clk);
-        o_tready = 0;
+        // @(negedge sys_clk);
+        // o_tready = 1;
+        // @(posedge o_tvalid);
+        // @(negedge sys_clk);
+        // o_tready = 0;
 
         // Wait and finish simulation
-        #100;
-        $finish;
+        // #100;
+        //$finish;
     end
 
     // Monitor

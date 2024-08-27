@@ -2,8 +2,8 @@
 
 module tb_sync_fifo();
 
-parameter    INPUT_WIDTH  = 16;
-parameter    OUTPUT_WIDTH = 16;
+parameter    INPUT_WIDTH  = 64;
+parameter    OUTPUT_WIDTH = 8;
 /*
 	The depth parameter of writing mem
 	if INPUT_WIDTH < OUTPUT_WIDTH, WR_DEPTH = (OUTPUT_WIDTH/INPUT_WIDTH) * RD_DEPTH
@@ -13,7 +13,7 @@ parameter    WR_DEPTH     = 16;
 	The depth parameter of reading mem
 	if INPUT_WIDTH > OUTPUT_WIDTH, RD_DEPTH = (INPUT_WIDTH/OUTPUT_WIDTH) * WR_DEPTH
 */
-parameter    RD_DEPTH     = 16;
+parameter    RD_DEPTH     = 128;
 //The parameter of reading method
 parameter    MODE         = "FWFT";
 //Is data stored from high bits or from low bits
@@ -49,29 +49,45 @@ reg	 [INPUT_WIDTH-1:0]		din;
 initial begin
 	wr_en = 1'b0;
 	rd_en = 1'b0;
+
 	#100
+
+	@(posedge sys_clk);
 	wr_en = 1'b1;
+	rd_en = 1'b0;
+
 	#(WR_DEPTH * 12)
+
+	@(posedge sys_clk);
 	wr_en = 1'b0;
+	rd_en = 1'b0;
+
 	#200
+
+	@(posedge sys_clk);
+	wr_en = 1'b0;
 	rd_en = 1'b1;
+
 	#(RD_DEPTH * 22)
+
+	@(posedge sys_clk);
+	wr_en = 1'b0;
 	rd_en = 1'b0;
 end
 
 always @(posedge sys_clk or negedge sys_rst) begin
 	if(sys_rst == 1'b1)begin
-		din <= 16'h0123;
+		din <= 64'h0123_4567_89ab_cdef;
 	end
 	else if(wr_en)begin
 		din[7:0]   <= din[7:0]   + 1'b1;
 		din[15:8]  <= din[15:8]  + 1'b1;
-		//din[23:16] <= din[23:16] + 1'b1;
-		//din[31:24] <= din[31:24] + 1'b1;
-		//din[39:32] <= din[39:32] + 1'b1;
-		//din[47:40] <= din[47:40] + 1'b1;
-		//din[55:48] <= din[55:48] + 1'b1;
-		//din[63:56] <= din[63:56] + 1'b1;
+		din[23:16] <= din[23:16] + 1'b1;
+		din[31:24] <= din[31:24] + 1'b1;
+		din[39:32] <= din[39:32] + 1'b1;
+		din[47:40] <= din[47:40] + 1'b1;
+		din[55:48] <= din[55:48] + 1'b1;
+		din[63:56] <= din[63:56] + 1'b1;
 	end
 end
 
@@ -90,7 +106,7 @@ sync_fifo #(
 	.OUTPUT_WIDTH 	( OUTPUT_WIDTH   ),
 	.WR_DEPTH     	( WR_DEPTH       ),
 	.RD_DEPTH     	( RD_DEPTH       ),
-	.MODE         	( "FWFT"		 ),
+	.MODE         	( MODE			 ),
 	.DIRECTION    	( "LSB"			 ))
 CP_fifo(
 	.clock       	( sys_clk        ),
