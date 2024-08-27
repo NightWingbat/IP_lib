@@ -331,7 +331,6 @@ generate for(j=2;j<$clog2(RD_DEPTH)-1;j=j+1) begin : RD_GRAY_COUNTER
 end
 endgenerate
 
-    
 //while fifo is not empty,pre-read data from fifo
 assign pre_read = (~empty) & empty_d1;
 
