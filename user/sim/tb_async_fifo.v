@@ -4,8 +4,8 @@ module tb_async_fifo();
 
 `define ef
 
-parameter    INPUT_WIDTH  = 8;
-parameter    OUTPUT_WIDTH = 64;
+parameter    INPUT_WIDTH  = 16;
+parameter    OUTPUT_WIDTH = 128;
 /*
 	The depth parameter of writing mem
 	if INPUT_WIDTH < OUTPUT_WIDTH, WR_DEPTH = (OUTPUT_WIDTH/INPUT_WIDTH) * RD_DEPTH
@@ -19,13 +19,13 @@ parameter    RD_DEPTH     = 16;
 //The parameter of reading method
 parameter    MODE         = "FWFT";
 //Is data stored from high bits or from low bits
-parameter    DIRECTION    = "MSB";
+parameter    DIRECTION    = "LSB";
 
 parameter 	 WR_FRE     = 100; //unit MHz
 parameter	 RD_FRE     = 50;
 reg          wr_clk     = 0;
 reg			 rd_clk     = 0;
-reg          sys_rst;
+reg          sys_rst	= 1;
 
 always begin
     #(500/WR_FRE) wr_clk = ~wr_clk;
@@ -35,11 +35,10 @@ always begin
     #(500/RD_FRE) rd_clk = ~rd_clk;
 end
 
-/*
+
 always begin
-    #50 sys_rst = 1;
+    #50 sys_rst = 0;
 end
-*/
 
 //Instance 
 // outports wire
@@ -69,23 +68,13 @@ initial begin
 	rd_en = 1'b0;
 end
 
-initial begin
-	sys_rst = 1'b0;
-	#50
-	sys_rst = 1'b1;
-	#1900
-	sys_rst = 1'b0;
-	#10
-	sys_rst = 1'b1;
-end
-
-always @(posedge wr_clk or negedge sys_rst) begin
-	if(sys_rst == 1'b0)begin
-		din <= 8'h01;
+always @(posedge wr_clk or posedge sys_rst) begin
+	if(sys_rst == 1'b1)begin
+		din <= 16'h0123;
 	end
 	else if(wr_en)begin
 		din[7:0]   <= din[7:0]   + 1'b1;
-		//din[15:8]  <= din[15:8]  + 1'b1;
+		din[15:8]  <= din[15:8]  + 1'b1;
 		//din[23:16] <= din[23:16] + 1'b1;
 		//din[31:24] <= din[31:24] + 1'b1;
 		//din[39:32] <= din[39:32] + 1'b1;
@@ -113,11 +102,11 @@ async_fifo #(
 	.MODE         	( MODE  		  ),
 	.DIRECTION    	( DIRECTION       ))
 u_async_fifo(
-	.rst            ( sys_rst		 ),
-	.wr_clk        	( wr_clk         ),
+	.reset          ( sys_rst		 ),
+	.wr_clock		( wr_clk         ),
 	.wr_en         	( wr_en          ),
 	.din           	( din            ),
-	.rd_clk        	( rd_clk         ),
+	.rd_clock       ( rd_clk         ),
 	.rd_en         	( rd_en          ),
 	.valid         	( valid	         ),
 	.dout          	( dout           ),

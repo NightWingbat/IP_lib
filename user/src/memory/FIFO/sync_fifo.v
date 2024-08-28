@@ -124,11 +124,11 @@ reg  [$clog2(WR_DEPTH) - 2 : 0]  wr_ptr_d1;      //buffer of wr_ptr,when countin
 reg  [$clog2(RD_DEPTH) : 0]      rd_ptr;         //mark the location of fifo reading
 reg  [$clog2(RD_DEPTH) - 2 : 0]  rd_ptr_d1;      //buffer of rd_ptr,when counting gary code,need it
 
-reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_next;
-reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_next_d1;
+reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_next;    //mark the next position of fifo reading
+reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_next_d1; //buffer of rd_ptr_next,when counting gary code,need it
 
-reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_pre;
-reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_fwft;
+reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_pre;    //mark the position of data in fifo before pre-reading
+reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_fwft;   //when in fwft mode,the change of ram_address need to use rd_ptr_fwft
 
 //DPRAM_port
 wire [RAM_NUM - 1 : 0]           ram_wr_en;     //DPRAM write enable signal
@@ -147,10 +147,8 @@ reg  [$clog2(RD_DEPTH)      : 0] rd_ptr_b;    //the binary of the gray code of r
 wire [$clog2(RAM_DEPTH)     : 0] ram_wr_addr_b;    //the binary of the gray code of ram_wr_addr
 wire [$clog2(RAM_DEPTH)     : 0] ram_rd_addr_b;    //the binary of the gray code of ram_rd_addr
 
-reg                              fwft_valid;       //indicating signal for fwft mode
-
 reg                              empty_d1;         //buffer of empty
-reg                              pre_valid;
+reg                              pre_valid;        //record the period before formal reading after pre reading
 wire                             pre_read;         //when in fwft mode,pre-acquire data from fifo
 
 //wr_port is ready to receive data
@@ -165,7 +163,7 @@ assign rd_data_space = RD_DEPTH - rd_data_count;
 //Asynchronous reset, synchronous release
 assign sys_rst = rst_d2;
 
-always @(posedge clock or negedge reset) begin
+always @(posedge clock or posedge reset) begin
     if(reset)begin
         rst_d1 <= 1'b0;
         rst_d2 <= 1'b0;
@@ -177,8 +175,6 @@ always @(posedge clock or negedge reset) begin
 end
 
 //mark the position of writing,use gray code counter
-
-////buffer of wr_ptr
 always @(posedge clock or negedge sys_rst) begin
     if(sys_rst == 1'b0)begin
         wr_ptr_d1 <= 1'b0;
@@ -218,13 +214,18 @@ generate for(m=2;m<$clog2(WR_DEPTH)-1;m=m+1)begin : WR_GRAY_COUNTER
         else if(wr_en & (~full))begin
             if(~(wr_ptr_d1[m]^wr_ptr[m]) & wr_ptr[m-1] & ~(|wr_ptr[m-2:0]))
                 wr_ptr[m] <= ~wr_ptr[m];
+            else 
+                wr_ptr[m] <= wr_ptr[m];
+        end
+        else begin
+            wr_ptr[m] <= wr_ptr[m];
         end
     end
 
 end
 endgenerate
 
-//mark the position of reading,use gray code counter
+//when in standard mode,mark the position of reading,use gray code counter
 always @(posedge clock or negedge sys_rst) begin
     if(sys_rst == 1'b0)begin
         rd_ptr_d1 <= 1'b0;
@@ -252,6 +253,7 @@ always @(posedge clock or negedge sys_rst) begin
     end
 end
 
+//when in fwft mode,rd_ptr need to add one to pre-extract from fifo,use gray code counter
 always @(posedge clock or negedge sys_rst) begin
     if(sys_rst == 1'b0)begin
         rd_ptr_next_d1 <= 1'b0;
@@ -291,7 +293,7 @@ generate for(j=2;j<$clog2(RD_DEPTH)-1;j=j+1) begin : RD_GRAY_COUNTER
         end
     end
 
-    //rd_ptr_fwft
+    //rd_ptr_next
     always @(posedge clock or negedge sys_rst)begin
         if(sys_rst == 1'b0)begin
             rd_ptr_next[j] <= 1'b0;
@@ -304,21 +306,7 @@ generate for(j=2;j<$clog2(RD_DEPTH)-1;j=j+1) begin : RD_GRAY_COUNTER
 end
 endgenerate
 
-//fwft_valid signal is used for fwft mode.When rd_en is set high,fwft_valid is set high
-
-always @(posedge clock or negedge sys_rst) begin
-    if(sys_rst == 1'b0)begin
-        fwft_valid <= 1'b0;
-    end
-    else if(rd_en)begin
-        fwft_valid <= 1'b1;
-    end
-    else begin
-        fwft_valid <= fwft_valid;
-    end
-end
-
-//when in fwft mode,rd_ptr need to add one to pre-extract from fifo
+//record the period before formal reading after pre reading
 always @(posedge clock or negedge sys_rst) begin
     if(sys_rst == 1'b0)begin
         pre_valid <= 1'b0;
@@ -334,6 +322,7 @@ always @(posedge clock or negedge sys_rst) begin
     end
 end
 
+//mark the position of data pre-read from fifo
 always @(posedge clock or negedge sys_rst) begin
     if(sys_rst == 1'b0)begin
         rd_ptr_pre <= 1'b0;
@@ -346,17 +335,21 @@ always @(posedge clock or negedge sys_rst) begin
     end
 end
 
+//when in fwft mode,the change of ram_address need to use rd_ptr_fwft
 always @(*) begin
     if(sys_rst == 1'b0)begin
         rd_ptr_fwft <= 1'b0;
     end
+    //when reading formally,rd_ptr need to add one to pre-extract from fifo
     else if(rd_en)begin
         rd_ptr_fwft <= rd_ptr_next;
     end
     else begin
+        //before formal reading after pre reading,read pre fetched data from FIFO
         if(pre_valid)begin
             rd_ptr_fwft <= rd_ptr_pre;
         end
+        //When it is not officially read and the FIFO is not empty, there is no need to read it in advance
         else begin
             rd_ptr_fwft <= rd_ptr_next;
         end
@@ -410,23 +403,38 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
 
     reg  [RAM_NUM - 1 : 0]  ram_sel;    //choose which ram rd_data to output
 
-    reg  [RAM_NUM - 1 : 0]  rd_en_d1;   //used for standard mode
-    wire [RAM_NUM - 1 : 0]  rd_en_d2;   //used for FWFT mode
-
     if(RAM_NUM >= 2)begin
-        //Flexible configuration is required based on the valid signal
-        assign rd_en_d2 = fwft_valid ? rd_en_d1 : {rd_en_d1[RAM_NUM - 2 : 0],rd_en_d1[RAM_NUM - 1]};
 
-        always @(posedge clock or negedge sys_rst) begin
-            if(sys_rst == 1'b0)begin
-                rd_en_d1 <= 1'b1;
+        if(MODE == "Standard")begin
+            
+            always @(posedge clock or negedge sys_rst) begin
+                if(sys_rst == 1'b0)begin
+                    ram_sel[RAM_NUM - 1]     <= 1'b1;
+                    ram_sel[RAM_NUM - 2 : 0] <= 1'b0;
+                end
+                else if(rd_en & (~empty))begin
+                    ram_sel <= {ram_sel[RAM_NUM - 2 : 0],ram_sel[RAM_NUM - 1]};
+                end
+                else begin
+                    ram_sel <= ram_sel;
+                end
             end
-            else if(rd_en)begin
-                rd_en_d1 <= {rd_en_d1[RAM_NUM - 2 : 0],rd_en_d1[RAM_NUM - 1]};
+
+        end
+        else if(MODE == "FWFT")begin
+            
+            always @(posedge clock or negedge sys_rst) begin
+                if(sys_rst == 1'b0)begin
+                    ram_sel <= 1'b1;
+                end
+                else if(rd_en & (~empty))begin
+                    ram_sel <= {ram_sel[RAM_NUM - 2 : 0],ram_sel[RAM_NUM - 1]};
+                end
+                else begin
+                    ram_sel <= ram_sel;
+                end
             end
-            else begin
-                rd_en_d1 <= rd_en_d1;
-            end
+
         end
 
     end
@@ -441,41 +449,7 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
             assign ram_rd_en[i] = rd_en & (~empty);
         end
         else if(MODE == "FWFT")begin
-            assign ram_rd_en[i] = (rd_en | pre_read) & (~empty);
-        end
-
-        if(MODE == "Standard")begin
-            always @(*) begin
-                if(sys_rst == 1'b0)begin
-                    ram_sel[i] <= 1'b0;
-                end
-                else begin
-                    ram_sel[i] <= rd_en & rd_en_d1[i];
-                end
-            end
-        end
-        else if(MODE == "FWFT")begin
-            always @(*) begin
-                if(sys_rst == 1'b0)begin
-                    ram_sel[i] <= 1'b0;
-                end
-                else begin
-                    case({rd_en,fwft_valid})
-                        2'b00:begin
-                            ram_sel[i] <= 1'b0;
-                        end
-                        2'b10:begin
-                            ram_sel[i] <= rd_en_d2[i];
-                        end
-                        2'b11:begin
-                            ram_sel[i] <= rd_en_d1[i];
-                        end
-                        default:begin
-                            ram_sel[i] <= 1'b0;
-                        end
-                    endcase
-                end
-            end
+            assign ram_rd_en[i] = (rd_en | pre_read) & (~empty); //fwft mode need to pre-read from fifo when fifo is not empty
         end
 
         if(DIRECTION == "LSB")begin
@@ -546,7 +520,7 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
                     dout <= 1'b0;
                 end
                 else begin
-                    case(rd_en_d1)
+                    case(ram_sel)
                         2'b01 : dout <= ram_rd_data[OUTPUT_WIDTH - 1 : 0];
                         2'b10 : dout <= ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
                         default:begin
@@ -563,7 +537,7 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
                     dout <= 1'b0;
                 end
                 else begin
-                    case(rd_en_d1)
+                    case(ram_sel)
                         4'b0001 : dout <= ram_rd_data[OUTPUT_WIDTH - 1 : 0];
                         4'b0010 : dout <= ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
                         4'b0100 : dout <= ram_rd_data[OUTPUT_WIDTH * 3 - 1 : OUTPUT_WIDTH * 2];
@@ -582,7 +556,7 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
                     dout <= 1'b0;
                 end
                 else begin
-                    case(rd_en_d1)
+                    case(ram_sel)
                         8'b0000_0001 : dout <= ram_rd_data[OUTPUT_WIDTH - 1 : 0];
                         8'b0000_0010 : dout <= ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
                         8'b0000_0100 : dout <= ram_rd_data[OUTPUT_WIDTH * 3 - 1 : OUTPUT_WIDTH * 2];
@@ -656,7 +630,7 @@ generate if(INPUT_WIDTH < OUTPUT_WIDTH) begin : SMALL_TO_BIG_RAM
             assign ram_rd_en[i] = rd_en & (~empty);
         end
         else if(MODE == "FWFT")begin
-            assign ram_rd_en[i] = (rd_en | pre_read) & (~empty);
+            assign ram_rd_en[i] = (rd_en | pre_read) & (~empty); //fwft mode need to pre-read from fifo when fifo is not empty
         end
 
         if(DIRECTION == "LSB")begin
@@ -796,32 +770,6 @@ generate if(MODE == "FWFT") begin : fwft_g2b
         end
     end
 
-    // if(INPUT_WIDTH < OUTPUT_WIDTH)begin
-    //     always @(*) begin
-    //         if(sys_rst == 1'b0)begin
-    //             rd_ptr_b <= 1'b0;
-    //         end
-    //         else begin
-    //             rd_ptr_b[$clog2(RD_DEPTH)] <= rd_ptr_fwft_d1[$clog2(RD_DEPTH)];
-    //             for(k=1;k<=$clog2(RD_DEPTH);k=k+1)begin
-    //                 rd_ptr_b[k-1]          <= rd_ptr_fwft_d1[k-1] ^ rd_ptr_b[k];
-    //             end
-    //         end
-    //     end
-    // end
-    // else if(INPUT_WIDTH >= OUTPUT_WIDTH)begin
-    //     always @(*) begin
-    //         if(sys_rst == 1'b0)begin
-    //             rd_ptr_b <= 1'b0;
-    //         end
-    //         else begin
-    //             rd_ptr_b[$clog2(RD_DEPTH)] <= rd_ptr[$clog2(RD_DEPTH)];
-    //             for(k=1;k<=$clog2(RD_DEPTH);k=k+1)begin
-    //                 rd_ptr_b[k-1]          <= rd_ptr[k-1] ^ rd_ptr_b[k];
-    //             end
-    //         end
-    //     end
-    // end
 end
 endgenerate
 
