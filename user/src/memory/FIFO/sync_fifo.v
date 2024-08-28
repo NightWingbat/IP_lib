@@ -163,7 +163,7 @@ assign rd_data_space = RD_DEPTH - rd_data_count;
 //Asynchronous reset, synchronous release
 assign sys_rst = rst_d2;
 
-always @(posedge clock or posedge reset) begin
+always @(posedge clock or negedge reset) begin
     if(reset)begin
         rst_d1 <= 1'b0;
         rst_d2 <= 1'b0;
