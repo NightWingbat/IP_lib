@@ -125,6 +125,9 @@ reg  [$clog2(RD_DEPTH) : 0]      rd_ptr;         //mark the location of fifo rea
 reg  [$clog2(RD_DEPTH) - 2 : 0]  rd_ptr_d1;      //buffer of rd_ptr,when counting gary code,need it
 
 reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_next;
+reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_next_d1;
+
+reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_pre;
 reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_fwft;
 
 //DPRAM_port
@@ -147,6 +150,7 @@ wire [$clog2(RAM_DEPTH)     : 0] ram_rd_addr_b;    //the binary of the gray code
 reg                              fwft_valid;       //indicating signal for fwft mode
 
 reg                              empty_d1;         //buffer of empty
+reg                              pre_valid;
 wire                             pre_read;         //when in fwft mode,pre-acquire data from fifo
 
 //wr_port is ready to receive data
@@ -250,11 +254,23 @@ end
 
 always @(posedge clock or negedge sys_rst) begin
     if(sys_rst == 1'b0)begin
-        rd_ptr_next                     <= 1'b1;
+        rd_ptr_next_d1 <= 1'b0;
     end
-    else if(rd_en & (~empty))begin
-        rd_ptr_next[0]                  <= (~(rd_ptr[0] ^ rd_ptr_next[0]))? ~rd_ptr_next[0] : rd_ptr_next[0];
-        rd_ptr_next[1]                  <= (~(rd_ptr[1] ^ rd_ptr_next[1]) & rd_ptr_next[0]) ? ~rd_ptr_next[1] : rd_ptr_next[1];
+    else if((rd_en | pre_read) & (~empty))begin
+        rd_ptr_next_d1 <= rd_ptr_next[$clog2(RD_DEPTH) - 2 : 0];
+    end
+    else begin
+        rd_ptr_next_d1 <= rd_ptr_next_d1;
+    end
+end
+
+always @(posedge clock or negedge sys_rst) begin
+    if(sys_rst == 1'b0)begin
+        rd_ptr_next                     <= 1'b0;
+    end
+    else if((rd_en | pre_read) & (~empty))begin
+        rd_ptr_next[0]                  <= (~(rd_ptr_next_d1[0] ^ rd_ptr_next[0]))? ~rd_ptr_next[0] : rd_ptr_next[0];
+        rd_ptr_next[1]                  <= (~(rd_ptr_next_d1[1] ^ rd_ptr_next[1]) & rd_ptr_next[0]) ? ~rd_ptr_next[1] : rd_ptr_next[1];
         rd_ptr_next[$clog2(RD_DEPTH)-1] <= ((rd_ptr_next[$clog2(RD_DEPTH)-1] ^ rd_ptr_next[$clog2(RD_DEPTH)-2]) & (~(|rd_ptr_next[$clog2(RD_DEPTH)-3:0]))) ? ~rd_ptr_next[$clog2(RD_DEPTH)-1] : rd_ptr_next[$clog2(RD_DEPTH)-1];
         rd_ptr_next[$clog2(RD_DEPTH)]   <= (rd_ptr_next[$clog2(RD_DEPTH)-1] & ~(|rd_ptr_next[$clog2(RD_DEPTH)-2:0]))? ~rd_ptr_next[$clog2(RD_DEPTH)] : rd_ptr_next[$clog2(RD_DEPTH)];
     end
@@ -280,8 +296,8 @@ generate for(j=2;j<$clog2(RD_DEPTH)-1;j=j+1) begin : RD_GRAY_COUNTER
         if(sys_rst == 1'b0)begin
             rd_ptr_next[j] <= 1'b0;
         end
-        else if(rd_en & (~empty))begin
-            if(~(rd_ptr[j] ^ rd_ptr_next[j]) & rd_ptr_next[j-1] & ~(|rd_ptr_next[j-2:0]))
+        else if((rd_en | pre_read) & (~empty))begin
+            if(~(rd_ptr_next_d1[j] ^ rd_ptr_next[j]) & rd_ptr_next[j-1] & ~(|rd_ptr_next[j-2:0]))
                 rd_ptr_next[j] <= ~rd_ptr_next[j];
         end
     end
@@ -303,28 +319,47 @@ always @(posedge clock or negedge sys_rst) begin
 end
 
 //when in fwft mode,rd_ptr need to add one to pre-extract from fifo
+always @(posedge clock or negedge sys_rst) begin
+    if(sys_rst == 1'b0)begin
+        pre_valid <= 1'b0;
+    end
+    else if(rd_en)begin
+        pre_valid <= 1'b0;
+    end
+    else if(pre_read)begin
+        pre_valid <= 1'b1;
+    end
+    else begin
+        pre_valid <= pre_valid;
+    end
+end
+
+always @(posedge clock or negedge sys_rst) begin
+    if(sys_rst == 1'b0)begin
+        rd_ptr_pre <= 1'b0;
+    end
+    else if(pre_read)begin
+        rd_ptr_pre <= rd_ptr_next;
+    end
+    else begin
+        rd_ptr_pre <= rd_ptr_pre;
+    end
+end
+
 always @(*) begin
     if(sys_rst == 1'b0)begin
         rd_ptr_fwft <= 1'b0;
     end
+    else if(rd_en)begin
+        rd_ptr_fwft <= rd_ptr_next;
+    end
     else begin
-        case({rd_en,fwft_valid})
-            2'b00:begin
-                rd_ptr_fwft <= rd_ptr;
-            end
-            2'b01:begin
-                rd_ptr_fwft <= rd_ptr_next;
-            end
-            2'b10:begin
-                rd_ptr_fwft <= rd_ptr_next;
-            end
-            2'b11:begin
-                rd_ptr_fwft <= rd_ptr_next;
-            end
-            default:begin
-                rd_ptr_fwft <= rd_ptr_next;
-            end
-        endcase
+        if(pre_valid)begin
+            rd_ptr_fwft <= rd_ptr_pre;
+        end
+        else begin
+            rd_ptr_fwft <= rd_ptr_next;
+        end
     end
 end
 

@@ -18,35 +18,35 @@
 # vmap work work 
 # Modifying modelsim.ini
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 21:50:55 on Aug 27,2024
+# Start time: 01:46:44 on Aug 28,2024
 # vlog -reportprogress 300 -work work ../sim/tb_sync_fifo.v 
 # -- Compiling module tb_sync_fifo
 # 
 # Top level modules:
 # 	tb_sync_fifo
-# End time: 21:50:55 on Aug 27,2024, Elapsed time: 0:00:00
+# End time: 01:46:44 on Aug 28,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 21:50:55 on Aug 27,2024
+# Start time: 01:46:44 on Aug 28,2024
 # vlog -reportprogress 300 -work work ../src/memory/FIFO/sync_fifo.v 
 # -- Compiling module sync_fifo
 # 
 # Top level modules:
 # 	sync_fifo
-# End time: 21:50:55 on Aug 27,2024, Elapsed time: 0:00:00
+# End time: 01:46:44 on Aug 28,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 21:50:55 on Aug 27,2024
+# Start time: 01:46:44 on Aug 28,2024
 # vlog -reportprogress 300 -work work ../src/memory/FIFO/DPRAM.v 
 # -- Compiling module DPRAM
 # 
 # Top level modules:
 # 	DPRAM
-# End time: 21:50:55 on Aug 27,2024, Elapsed time: 0:00:00
+# End time: 01:46:44 on Aug 28,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # vsim -t ps "+notimingchecks" -gui -voptargs=""+acc"" work.tb_sync_fifo 
-# Start time: 21:50:55 on Aug 27,2024
-# ** Note: (vsim-8009) Loading existing optimized design _opt2
+# Start time: 01:46:44 on Aug 28,2024
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
 # Loading work.tb_sync_fifo(fast)
 # Loading work.sync_fifo(fast)
 # Loading work.DPRAM(fast)
@@ -142,5 +142,5 @@
 # the read data is 0e30	 the read_count is  2
 # the read data is 0f31	 the read_count is  1
 # the read data is 1032	 the read_count is  0
-# End time: 22:52:18 on Aug 27,2024, Elapsed time: 1:01:23
+# End time: 01:47:04 on Aug 28,2024, Elapsed time: 0:00:20
 # Errors: 0, Warnings: 0
