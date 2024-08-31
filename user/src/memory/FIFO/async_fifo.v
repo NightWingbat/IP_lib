@@ -41,23 +41,25 @@
 
 module async_fifo #(
     //The width parameter for writing data
-    parameter    INPUT_WIDTH  = 128,
+    parameter    INPUT_WIDTH       = 128,
     //The width parameter for reading data
-    parameter    OUTPUT_WIDTH = 16,
-    /*
-      The depth parameter of writing mem
-      if INPUT_WIDTH < OUTPUT_WIDTH, WR_DEPTH = (OUTPUT_WIDTH/INPUT_WIDTH) * RD_DEPTH
-    */
-    parameter    WR_DEPTH     = 1024,
-    /*
-      The depth parameter of reading mem
-      if INPUT_WIDTH > OUTPUT_WIDTH, RD_DEPTH = (INPUT_WIDTH/OUTPUT_WIDTH) * WR_DEPTH
-    */
-    parameter    RD_DEPTH     = 8192,
+    parameter    OUTPUT_WIDTH      = 16,
+    //The depth parameter of writing mem,if INPUT_WIDTH < OUTPUT_WIDTH, WR_DEPTH = (OUTPUT_WIDTH/INPUT_WIDTH) * RD_DEPTH
+    parameter    WR_DEPTH          = 1024,
+      //The depth parameter of reading mem,if INPUT_WIDTH > OUTPUT_WIDTH, RD_DEPTH = (INPUT_WIDTH/OUTPUT_WIDTH) * WR_DEPTH
+    parameter    RD_DEPTH          = 8192,
     //The parameter of reading method
-    parameter    MODE         = "FWFT",
+    parameter    MODE              = "FWFT",
     //Is data stored from high bits or from low bits
-    parameter    DIRECTION    = "MSB"
+    parameter    DIRECTION         = "MSB",
+    //Set error correction function
+    parameter    ECC_MODE          = "no_ecc",
+    //Specify the value of the programmable null threshold
+    parameter    PROG_EMPTY_THRESH = 10,
+    //Specify the value of programmable full threshold
+    parameter    PROG_FULL_THRESH  = 10,
+    //Enable the corresponding signal
+    parameter    USE_ADV_FEATURES  = "0707"
 ) (
     //reser
     input                              reset,
@@ -94,7 +96,21 @@ module async_fifo #(
     //rd_port num of the output data
     output  reg [$clog2(RD_DEPTH) : 0] rd_data_count,
     //rd_port num of the remaining data
-    output      [$clog2(RD_DEPTH) : 0] rd_data_space
+    output      [$clog2(RD_DEPTH) : 0] rd_data_space,
+    //fifo is about to be full,fifo can only perform one write, and after the write, the fifo becomes full
+    output                             almost_full,
+    //fifo is about to be empty,fifo can only perform one read, and after the read, the fifo becomes empty
+    output                             almost_empty,
+    //when the amount of data in the fifo is greater than or equal to the programmable full threshold, the signal is pulled high
+    output                             prog_full,
+    //when the amount of data in the fifo is less than or equal to the programmable null threshold, the signal is pulled high
+    output                             prog_empty,
+    //the write request from the previous clock cycle was rejected because the fifo is now full
+    output  reg                        overflow,
+    //the read request from the previous clock cycle was rejected because the fifo is now empty
+    output  reg                        underflow,
+    //the write request was successful in the previous clock cycle
+    output                             wr_ack
 );
 
 //the number of ram needed to be operated
@@ -871,5 +887,164 @@ assign full          = (ram_wr_addr[$clog2(RAM_DEPTH)]         != ram_rd_addr_g_
                        (ram_wr_addr[$clog2(RAM_DEPTH) - 1 : 0] == ram_rd_addr_g_d2[$clog2(RAM_DEPTH) - 1 : 0]) ? 1'b1 : 1'b0;
 
 assign empty         = (ram_rd_addr == ram_wr_addr_g_d2) ? 1'b1 : 1'b0;
+
+//fifo is about to be full
+generate if(USE_ADV_FEATURES[3] == 1'b1) begin : ALMOST_FULL_ENABLE
+
+    if(INPUT_WIDTH >= OUTPUT_WIDTH)begin
+        assign almost_full = (rd_data_count == RD_DEPTH - 1) ? 1'b1 : 1'b0;
+    end
+    else if(INPUT_WIDTH < OUTPUT_WIDTH)begin
+        assign almost_full = (wr_data_count == WR_DEPTH - 1) ? 1'b1 : 1'b0;
+    end
+
+end
+endgenerate
+
+generate if(USE_ADV_FEATURES[3] == 1'b0) begin : ALMOST_FULL_DISABLE
+
+    assign almost_full = 1'b0;
+
+end
+endgenerate
+
+//fifo is about to be empty
+generate if(USE_ADV_FEATURES[11] == 1'b1) begin : ALMOST_EMPTY_ENABLE
+
+    if(INPUT_WIDTH >= OUTPUT_WIDTH)begin
+        assign almost_empty = (rd_data_count == 1'b1) ? 1'b1 : 1'b0;
+    end
+    else if(INPUT_WIDTH < OUTPUT_WIDTH)begin
+        assign almost_empty = (wr_data_count == 1'b1) ? 1'b1 : 1'b0;
+    end
+
+end
+endgenerate
+
+generate if(USE_ADV_FEATURES[11] == 1'b0) begin : ALMOST_EMPTY_DISABLE
+
+    assign almost_empty = 1'b0;
+
+end
+endgenerate
+
+//the amount of data in the fifo is greater than or equal to the programmable full threshold
+generate if(USE_ADV_FEATURES[1] == 1'b1) begin : PROG_FULL_ENABLE
+    
+    if(INPUT_WIDTH >= OUTPUT_WIDTH)begin
+        assign prog_full = (rd_data_count >= PROG_FULL_THRESH) ? 1'b1 : 1'b0;
+    end
+    else if(INPUT_WIDTH < OUTPUT_WIDTH)begin
+        assign prog_full = (wr_data_count >= PROG_FULL_THRESH) ? 1'b1 : 1'b0;
+    end
+
+end
+endgenerate
+
+generate if(USE_ADV_FEATURES[1] == 1'b0) begin : PROG_FULL_DISABLE
+    
+    assign prog_full = 1'b0;
+
+end
+endgenerate
+
+//the amount of data in the FIFO is less than or equal to the programmable null threshold
+generate if(USE_ADV_FEATURES[9] == 1'b1) begin : PROG_EMPTY_ENABLE
+    
+    if(INPUT_WIDTH >= OUTPUT_WIDTH)begin
+        assign prog_empty = (rd_data_count <= PROG_EMPTY_THRESH) ? 1'b1 : 1'b0;
+    end
+    else if(INPUT_WIDTH < OUTPUT_WIDTH)begin
+        assign prog_empty = (wr_data_count <= PROG_EMPTY_THRESH) ? 1'b1 : 1'b0;
+    end
+
+end
+endgenerate
+
+generate if(USE_ADV_FEATURES[9] == 1'b0) begin : PROG_EMPTY_DISABLE
+    
+    assign prog_empty = 1'b0;
+
+end
+endgenerate
+
+//the write request from the previous clock cycle was rejected because the FIFO is now full
+generate if(USE_ADV_FEATURES[0] == 1'b1) begin : OVERFLOW_ENABLE
+    
+    always @(posedge wr_clock or negedge wr_rst) begin
+        if(wr_rst == 1'b0)begin
+            overflow <= 1'b0;
+        end
+        else if(full)begin
+            if(wr_en)begin
+                overflow <= 1'b1;
+            end
+            else begin
+                overflow <= overflow;
+            end
+        end
+        else begin
+            overflow <= 1'b0;
+        end
+    end
+
+end
+endgenerate
+
+generate if(USE_ADV_FEATURES[0] == 1'b0) begin : OVERFLOW_DISABLE
+    
+    always @(*) begin
+        overflow <= 1'b0;
+    end
+
+end
+endgenerate
+
+//the read request from the previous clock cycle was rejected because the FIFO is now empty
+generate if(USE_ADV_FEATURES[8] == 1'b1) begin : UNDERFLOW_ENABLE
+    
+    always @(posedge rd_clock or negedge rd_rst) begin
+        if(rd_rst == 1'b0)begin
+            underflow <= 1'b0;
+        end
+        else if(empty)begin
+            if(rd_en)begin
+                underflow <= 1'b1;
+            end
+            else begin
+                underflow <= underflow;
+            end
+        end
+        else begin
+            overflow <= 1'b0;
+        end
+    end
+
+end
+endgenerate
+
+generate if(USE_ADV_FEATURES[8] == 1'b0) begin : UNDERFLOW_DISABLE
+    
+    always @(*) begin
+        underflow <= 1'b0;
+    end
+
+end
+endgenerate
+
+//the write request was successful in the previous clock cycle
+generate if(USE_ADV_FEATURES[4] == 1'b1) begin : WR_ACK_ENABLE
+    
+    assign wr_ack = wr_en & (~full);
+
+end
+endgenerate
+
+generate if(USE_ADV_FEATURES[4] == 1'b0) begin : WR_ACK_DISABLE
+    
+    assign wr_ack = 1'b0;
+
+end
+endgenerate
 
 endmodule  //async_fifo

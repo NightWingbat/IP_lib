@@ -18,181 +18,87 @@
 # vmap work work 
 # Modifying modelsim.ini
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 22:29:42 on Aug 28,2024
+# Start time: 21:01:25 on Aug 31,2024
 # vlog -reportprogress 300 -work work ../sim/tb_sync_fifo.v 
 # -- Compiling module tb_sync_fifo
 # 
 # Top level modules:
 # 	tb_sync_fifo
-# End time: 22:29:42 on Aug 28,2024, Elapsed time: 0:00:00
+# End time: 21:01:25 on Aug 31,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 22:29:42 on Aug 28,2024
+# Start time: 21:01:25 on Aug 31,2024
 # vlog -reportprogress 300 -work work ../src/memory/FIFO/sync_fifo.v 
 # -- Compiling module sync_fifo
 # 
 # Top level modules:
 # 	sync_fifo
-# End time: 22:29:42 on Aug 28,2024, Elapsed time: 0:00:00
+# End time: 21:01:25 on Aug 31,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 22:29:42 on Aug 28,2024
+# Start time: 21:01:25 on Aug 31,2024
 # vlog -reportprogress 300 -work work ../src/memory/FIFO/DPRAM.v 
 # -- Compiling module DPRAM
 # 
 # Top level modules:
 # 	DPRAM
-# End time: 22:29:42 on Aug 28,2024, Elapsed time: 0:00:00
+# End time: 21:01:25 on Aug 31,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 21:01:25 on Aug 31,2024
+# vlog -reportprogress 300 -sv ../src/memory/FIFO/ecc_encode.sv 
+# -- Compiling module ecc_encode
+# 
+# Top level modules:
+# 	ecc_encode
+# End time: 21:01:25 on Aug 31,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 21:01:25 on Aug 31,2024
+# vlog -reportprogress 300 -sv ../src/memory/FIFO/ecc_decode.sv 
+# -- Compiling module ecc_decode
+# 
+# Top level modules:
+# 	ecc_decode
+# End time: 21:01:25 on Aug 31,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # vsim -t ps "+notimingchecks" -gui -voptargs=""+acc"" work.tb_sync_fifo 
-# Start time: 22:29:42 on Aug 28,2024
+# Start time: 21:01:25 on Aug 31,2024
 # ** Note: (vsim-3813) Design is being optimized due to module recompilation...
 # Loading work.tb_sync_fifo(fast)
 # Loading work.sync_fifo(fast)
 # Loading work.DPRAM(fast)
-# the write data is 0123456789abcdef	 the write_count is  0
-# the write data is 022446688aaccef0	 the write_count is  1
-# the write data is 032547698badcff1	 the write_count is  2
-# the write data is 0426486a8caed0f2	 the write_count is  3
-# the write data is 0527496b8dafd1f3	 the write_count is  4
-# the write data is 06284a6c8eb0d2f4	 the write_count is  5
-# the write data is 07294b6d8fb1d3f5	 the write_count is  6
-# the write data is 082a4c6e90b2d4f6	 the write_count is  7
-# the write data is 092b4d6f91b3d5f7	 the write_count is  8
-# the write data is 0a2c4e7092b4d6f8	 the write_count is  9
-# the write data is 0b2d4f7193b5d7f9	 the write_count is 10
-# the write data is 0c2e507294b6d8fa	 the write_count is 11
-# the write data is 0d2f517395b7d9fb	 the write_count is 12
-# the write data is 0e30527496b8dafc	 the write_count is 13
-# the write data is 0f31537597b9dbfd	 the write_count is 14
-# the write data is 1032547698badcfe	 the write_count is 15
-# the read data is ef	 the read_count is 127
-# the read data is cd	 the read_count is 126
-# the read data is ab	 the read_count is 125
-# the read data is 89	 the read_count is 124
-# the read data is 67	 the read_count is 123
-# the read data is 45	 the read_count is 122
-# the read data is 23	 the read_count is 121
-# the read data is 01	 the read_count is 120
-# the read data is f0	 the read_count is 119
-# the read data is ce	 the read_count is 118
-# the read data is ac	 the read_count is 117
-# the read data is 8a	 the read_count is 116
-# the read data is 68	 the read_count is 115
-# the read data is 46	 the read_count is 114
-# the read data is 24	 the read_count is 113
-# the read data is 02	 the read_count is 112
-# the read data is f1	 the read_count is 111
-# the read data is cf	 the read_count is 110
-# the read data is ad	 the read_count is 109
-# the read data is 8b	 the read_count is 108
-# the read data is 69	 the read_count is 107
-# the read data is 47	 the read_count is 106
-# the read data is 25	 the read_count is 105
-# the read data is 03	 the read_count is 104
-# the read data is f2	 the read_count is 103
-# the read data is d0	 the read_count is 102
-# the read data is ae	 the read_count is 101
-# the read data is 8c	 the read_count is 100
-# the read data is 6a	 the read_count is  99
-# the read data is 48	 the read_count is  98
-# the read data is 26	 the read_count is  97
-# the read data is 04	 the read_count is  96
-# the read data is f3	 the read_count is  95
-# the read data is d1	 the read_count is  94
-# the read data is af	 the read_count is  93
-# the read data is 8d	 the read_count is  92
-# the read data is 6b	 the read_count is  91
-# the read data is 49	 the read_count is  90
-# the read data is 27	 the read_count is  89
-# the read data is 05	 the read_count is  88
-# the read data is f4	 the read_count is  87
-# the read data is d2	 the read_count is  86
-# the read data is b0	 the read_count is  85
-# the read data is 8e	 the read_count is  84
-# the read data is 6c	 the read_count is  83
-# the read data is 4a	 the read_count is  82
-# the read data is 28	 the read_count is  81
-# the read data is 06	 the read_count is  80
-# the read data is f5	 the read_count is  79
-# the read data is d3	 the read_count is  78
-# the read data is b1	 the read_count is  77
-# the read data is 8f	 the read_count is  76
-# the read data is 6d	 the read_count is  75
-# the read data is 4b	 the read_count is  74
-# the read data is 29	 the read_count is  73
-# the read data is 07	 the read_count is  72
-# the read data is f6	 the read_count is  71
-# the read data is d4	 the read_count is  70
-# the read data is b2	 the read_count is  69
-# the read data is 90	 the read_count is  68
-# the read data is 6e	 the read_count is  67
-# the read data is 4c	 the read_count is  66
-# the read data is 2a	 the read_count is  65
-# the read data is 08	 the read_count is  64
-# the read data is f7	 the read_count is  63
-# the read data is d5	 the read_count is  62
-# the read data is b3	 the read_count is  61
-# the read data is 91	 the read_count is  60
-# the read data is 6f	 the read_count is  59
-# the read data is 4d	 the read_count is  58
-# the read data is 2b	 the read_count is  57
-# the read data is 09	 the read_count is  56
-# the read data is f8	 the read_count is  55
-# the read data is d6	 the read_count is  54
-# the read data is b4	 the read_count is  53
-# the read data is 92	 the read_count is  52
-# the read data is 70	 the read_count is  51
-# the read data is 4e	 the read_count is  50
-# the read data is 2c	 the read_count is  49
-# the read data is 0a	 the read_count is  48
-# the read data is f9	 the read_count is  47
-# the read data is d7	 the read_count is  46
-# the read data is b5	 the read_count is  45
-# the read data is 93	 the read_count is  44
-# the read data is 71	 the read_count is  43
-# the read data is 4f	 the read_count is  42
-# the read data is 2d	 the read_count is  41
-# the read data is 0b	 the read_count is  40
-# the read data is fa	 the read_count is  39
-# the read data is d8	 the read_count is  38
-# the read data is b6	 the read_count is  37
-# the read data is 94	 the read_count is  36
-# the read data is 72	 the read_count is  35
-# the read data is 50	 the read_count is  34
-# the read data is 2e	 the read_count is  33
-# the read data is 0c	 the read_count is  32
-# the read data is fb	 the read_count is  31
-# the read data is d9	 the read_count is  30
-# the read data is b7	 the read_count is  29
-# the read data is 95	 the read_count is  28
-# the read data is 73	 the read_count is  27
-# the read data is 51	 the read_count is  26
-# the read data is 2f	 the read_count is  25
-# the read data is 0d	 the read_count is  24
-# the read data is fc	 the read_count is  23
-# the read data is da	 the read_count is  22
-# the read data is b8	 the read_count is  21
-# the read data is 96	 the read_count is  20
-# the read data is 74	 the read_count is  19
-# the read data is 52	 the read_count is  18
-# the read data is 30	 the read_count is  17
-# the read data is 0e	 the read_count is  16
-# the read data is fd	 the read_count is  15
-# the read data is db	 the read_count is  14
-# the read data is b9	 the read_count is  13
-# the read data is 97	 the read_count is  12
-# the read data is 75	 the read_count is  11
-# the read data is 53	 the read_count is  10
-# the read data is 31	 the read_count is   9
-# the read data is 0f	 the read_count is   8
-# the read data is fe	 the read_count is   7
-# the read data is dc	 the read_count is   6
-# the read data is ba	 the read_count is   5
-# the read data is 98	 the read_count is   4
-# the read data is 76	 the read_count is   3
-# the read data is 54	 the read_count is   2
-# the read data is 32	 the read_count is   1
-# the read data is 10	 the read_count is   0
-# End time: 22:29:57 on Aug 28,2024, Elapsed time: 0:00:15
+# the write data is 0123	 the write_count is  0
+# the write data is 0224	 the write_count is  1
+# the write data is 0325	 the write_count is  2
+# the write data is 0426	 the write_count is  3
+# the write data is 0527	 the write_count is  4
+# the write data is 0628	 the write_count is  5
+# the write data is 0729	 the write_count is  6
+# the write data is 082a	 the write_count is  7
+# the write data is 092b	 the write_count is  8
+# the write data is 0a2c	 the write_count is  9
+# the write data is 0b2d	 the write_count is 10
+# the write data is 0c2e	 the write_count is 11
+# the write data is 0d2f	 the write_count is 12
+# the write data is 0e30	 the write_count is 13
+# the write data is 0f31	 the write_count is 14
+# the write data is 1032	 the write_count is 15
+# the read data is 0123	 the read_count is 15
+# the read data is 0224	 the read_count is 14
+# the read data is 0325	 the read_count is 13
+# the read data is 0426	 the read_count is 12
+# the read data is 0527	 the read_count is 11
+# the read data is 0628	 the read_count is 10
+# the read data is 0729	 the read_count is  9
+# the read data is 082a	 the read_count is  8
+# the read data is 092b	 the read_count is  7
+# the read data is 0a2c	 the read_count is  6
+# the read data is 0b2d	 the read_count is  5
+# the read data is 0c2e	 the read_count is  4
+# the read data is 0d2f	 the read_count is  3
+# the read data is 0e30	 the read_count is  2
+# the read data is 0f31	 the read_count is  1
+# the read data is 1032	 the read_count is  0
+# End time: 21:19:17 on Aug 31,2024, Elapsed time: 0:17:52
 # Errors: 0, Warnings: 0

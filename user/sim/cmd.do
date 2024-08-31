@@ -8,6 +8,8 @@ vmap work work
 vlog -work work ../sim/tb_sync_fifo.v
 vlog -work work ../src/memory/FIFO/sync_fifo.v
 vlog -work work ../src/memory/FIFO/DPRAM.v
+vlog -sv        ../src/memory/FIFO/ecc_encode.sv
+vlog -sv        ../src/memory/FIFO/ecc_decode.sv
 
 # 加载仿真设计
 
@@ -36,6 +38,16 @@ add wave /tb_sync_fifo/empty
 
 add wave /tb_sync_fifo/rd_data_count
 add wave /tb_sync_fifo/rd_data_space
+
+add wave /tb_sync_fifo/almost_full
+add wave /tb_sync_fifo/almost_empty
+add wave /tb_sync_fifo/prog_full
+add wave /tb_sync_fifo/prog_empty
+add wave /tb_sync_fifo/overflow
+add wave /tb_sync_fifo/underflow
+add wave /tb_sync_fifo/wr_ack
+add wave /tb_sync_fifo/sbiterr
+add wave /tb_sync_fifo/dbiterr
 
 # 启动仿真
 

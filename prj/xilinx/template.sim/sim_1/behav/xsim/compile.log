@@ -1,6 +1,0 @@
-INFO: [VRFC 10-2263] Analyzing Verilog file "f:/FPGA_Project/IP_lib/user/src/memory/FIFO/DPRAM.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module DPRAM
-INFO: [VRFC 10-2263] Analyzing Verilog file "f:/FPGA_Project/IP_lib/user/src/memory/FIFO/async_fifo.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module async_fifo
-INFO: [VRFC 10-2263] Analyzing Verilog file "f:/FPGA_Project/IP_lib/user/sim/tb_async_fifo.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module tb_async_fifo
