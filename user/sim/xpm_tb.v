@@ -1,6 +1,6 @@
 `timescale 1 ns / 1 ns
 
-module tb_sync_fifo();
+module tb_xpm();
 
 parameter    INPUT_WIDTH  = 64;
 parameter    OUTPUT_WIDTH = 8;
@@ -159,7 +159,7 @@ xpm_fifo_sync #(
 
 initial begin            
     $dumpfile("wave.vcd");        
-    $dumpvars(0, tb_sync_fifo);    
+    $dumpvars(0, tb_xpm);    
     #50000 $finish;
 end
 

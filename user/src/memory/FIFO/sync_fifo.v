@@ -636,7 +636,7 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
                         8'b0001_0000 : dout <= ram_rd_data[OUTPUT_WIDTH * 5 - 1 : OUTPUT_WIDTH * 4];
                         8'b0010_0000 : dout <= ram_rd_data[OUTPUT_WIDTH * 6 - 1 : OUTPUT_WIDTH * 5];
                         8'b0100_0000 : dout <= ram_rd_data[OUTPUT_WIDTH * 7 - 1 : OUTPUT_WIDTH * 6];
-                        8'b1000_0000: dout <= ram_rd_data[OUTPUT_WIDTH * 8 - 1 : OUTPUT_WIDTH * 7];
+                        8'b1000_0000 : dout <= ram_rd_data[OUTPUT_WIDTH * 8 - 1 : OUTPUT_WIDTH * 7];
                         default:begin
                             dout            <= ram_rd_data[OUTPUT_WIDTH - 1 : 0];
                         end
@@ -859,11 +859,39 @@ assign empty = (ram_wr_addr == ram_rd_addr) ? 1'b1 : 1'b0;
 //fifo is about to be full
 generate if(USE_ADV_FEATURES[3] == 1'b1) begin : ALMOST_FULL_ENABLE
 
+    reg almost_full_d1;
+
+    assign almost_full = almost_full_d1;
+
     if(INPUT_WIDTH >= OUTPUT_WIDTH)begin
-        assign almost_full = (rd_data_count == RD_DEPTH - 1) ? 1'b1 : 1'b0;
+
+        always @(posedge clock or negedge sys_rst) begin
+            if(sys_rst == 1'b0)begin
+                almost_full_d1 <= 1'b0;
+            end
+            else if(rd_data_count == RD_DEPTH - 1)begin
+                almost_full_d1 <= 1'b1;
+            end
+            else begin
+                almost_full_d1 <= 1'b0;
+            end
+        end
+
     end
     else if(INPUT_WIDTH < OUTPUT_WIDTH)begin
-        assign almost_full = (wr_data_count == WR_DEPTH - 1) ? 1'b1 : 1'b0;
+
+        always @(posedge clock or negedge sys_rst) begin
+            if(sys_rst == 1'b0)begin
+                almost_full_d1 <= 1'b0;
+            end
+            else if(wr_data_count == WR_DEPTH - 1)begin
+                almost_full_d1 <= 1'b1;
+            end
+            else begin
+                almost_full_d1 <= 1'b0;
+            end
+        end
+
     end
 
 end

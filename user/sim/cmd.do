@@ -10,6 +10,8 @@ vlog -work work ../src/memory/FIFO/sync_fifo.v
 vlog -work work ../src/memory/FIFO/DPRAM.v
 vlog -sv        ../src/memory/FIFO/ecc_encode.sv
 vlog -sv        ../src/memory/FIFO/ecc_decode.sv
+vlog -sv        ../sim/xpm_fifo.sv
+vlog -sv        ../sim/xpm_memory.sv
 
 # 加载仿真设计
 
@@ -39,15 +41,24 @@ add wave /tb_sync_fifo/empty
 add wave /tb_sync_fifo/rd_data_count
 add wave /tb_sync_fifo/rd_data_space
 
-add wave /tb_sync_fifo/almost_full
-add wave /tb_sync_fifo/almost_empty
-add wave /tb_sync_fifo/prog_full
-add wave /tb_sync_fifo/prog_empty
-add wave /tb_sync_fifo/overflow
-add wave /tb_sync_fifo/underflow
-add wave /tb_sync_fifo/wr_ack
-add wave /tb_sync_fifo/sbiterr
-add wave /tb_sync_fifo/dbiterr
+add wave -divider {xpm_fifo}
+
+add wave -color {yellow} /tb_sync_fifo/xpm_valid;
+add wave -color {yellow} /tb_sync_fifo/xpm_dout;
+add wave -color {yellow} /tb_sync_fifo/xpm_full;
+add wave -color {yellow} /tb_sync_fifo/xpm_empty;
+add wave -color {yellow} /tb_sync_fifo/xpm_wr_data_count;
+add wave -color {yellow} /tb_sync_fifo/xpm_rd_data_count;
+
+# add wave /tb_sync_fifo/almost_full
+# add wave /tb_sync_fifo/almost_empty
+# add wave /tb_sync_fifo/prog_full
+# add wave /tb_sync_fifo/prog_empty
+# add wave /tb_sync_fifo/overflow
+# add wave /tb_sync_fifo/underflow
+# add wave /tb_sync_fifo/wr_ack
+# add wave /tb_sync_fifo/sbiterr
+# add wave /tb_sync_fifo/dbiterr
 
 # 启动仿真
 
