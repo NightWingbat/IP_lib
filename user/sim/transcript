@@ -18,166 +18,62 @@
 # vmap work work 
 # Modifying F:\FPGA_Project\IP_lib\modelsim.ini
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 21:59:53 on Sep 04,2024
-# vlog -reportprogress 300 -work work ../sim/tb_sync_fifo.v 
-# -- Compiling module tb_sync_fifo
+# Start time: 12:12:25 on Sep 21,2024
+# vlog -reportprogress 300 -work work ../sim/tb_spi.v 
+# -- Compiling module tb_spi
 # 
 # Top level modules:
-# 	tb_sync_fifo
-# End time: 21:59:54 on Sep 04,2024, Elapsed time: 0:00:01
+# 	tb_spi
+# End time: 12:12:25 on Sep 21,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 21:59:54 on Sep 04,2024
-# vlog -reportprogress 300 -work work ../src/memory/FIFO/sync_fifo.v 
-# -- Compiling module sync_fifo
+# Start time: 12:12:26 on Sep 21,2024
+# vlog -reportprogress 300 -work work ../src/Interface/SPI.v 
+# -- Compiling module SPI
 # 
 # Top level modules:
-# 	sync_fifo
-# End time: 21:59:55 on Sep 04,2024, Elapsed time: 0:00:01
+# 	SPI
+# End time: 12:12:26 on Sep 21,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 21:59:55 on Sep 04,2024
-# vlog -reportprogress 300 -work work ../src/memory/FIFO/DPRAM.v 
-# -- Compiling module DPRAM
+# Start time: 12:12:26 on Sep 21,2024
+# vlog -reportprogress 300 -work work ../src/Interface/spi_adi.v 
+# -- Compiling module spi_adi
 # 
 # Top level modules:
-# 	DPRAM
-# End time: 21:59:55 on Sep 04,2024, Elapsed time: 0:00:00
+# 	spi_adi
+# End time: 12:12:26 on Sep 21,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 21:59:55 on Sep 04,2024
-# vlog -reportprogress 300 -sv ../src/memory/FIFO/ecc_encode.sv 
-# -- Compiling module ecc_encode
+# Start time: 12:12:26 on Sep 21,2024
+# vlog -reportprogress 300 -work work ../src/Interface/spi_slave.v 
+# -- Compiling module spi_slave
 # 
 # Top level modules:
-# 	ecc_encode
-# End time: 21:59:55 on Sep 04,2024, Elapsed time: 0:00:00
+# 	spi_slave
+# End time: 12:12:26 on Sep 21,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
-# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 21:59:55 on Sep 04,2024
-# vlog -reportprogress 300 -sv ../src/memory/FIFO/ecc_decode.sv 
-# -- Compiling module ecc_decode
-# 
-# Top level modules:
-# 	ecc_decode
-# End time: 21:59:55 on Sep 04,2024, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 0
-# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 21:59:55 on Sep 04,2024
-# vlog -reportprogress 300 -sv ../sim/xpm_fifo.sv 
-# -- Compiling module xpm_fifo_base
-# -- Compiling module xpm_fifo_rst
-# -- Compiling module xpm_counter_updn
-# -- Compiling module xpm_fifo_reg_vec
-# -- Compiling module xpm_fifo_reg_bit
-# -- Compiling module xpm_reg_pipe_bit
-# -- Compiling module xpm_fifo_sync
-# -- Compiling module xpm_fifo_async
-# -- Compiling module xpm_fifo_axis
-# -- Compiling module xpm_fifo_axif
-# -- Compiling module xpm_fifo_axil
-# -- Compiling module xpm_fifo_axi_reg_slice
-# 
-# Top level modules:
-# 	xpm_fifo_sync
-# 	xpm_fifo_async
-# 	xpm_fifo_axis
-# 	xpm_fifo_axif
-# 	xpm_fifo_axil
-# End time: 21:59:55 on Sep 04,2024, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 0
-# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 21:59:55 on Sep 04,2024
-# vlog -reportprogress 300 -sv ../sim/xpm_memory.sv 
-# -- Compiling module xpm_memory_base
-# -- Compiling module asym_bwe_bb
-# -- Compiling module xpm_memory_dpdistram
-# -- Compiling module xpm_memory_dprom
-# -- Compiling module xpm_memory_sdpram
-# -- Compiling module xpm_memory_spram
-# -- Compiling module xpm_memory_sprom
-# -- Compiling module xpm_memory_tdpram
-# 
-# Top level modules:
-# 	xpm_memory_dpdistram
-# 	xpm_memory_dprom
-# 	xpm_memory_sdpram
-# 	xpm_memory_spram
-# 	xpm_memory_sprom
-# 	xpm_memory_tdpram
-# End time: 21:59:55 on Sep 04,2024, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 0
-# vsim -t ps "+notimingchecks" -gui -voptargs=""+acc"" work.tb_sync_fifo 
-# Start time: 21:59:55 on Sep 04,2024
+# vsim -t ps "+notimingchecks" -gui -voptargs=""+acc"" work.tb_spi 
+# Start time: 12:12:26 on Sep 21,2024
 # ** Note: (vsim-3813) Design is being optimized due to module recompilation...
-# ** Warning: ../sim/tb_sync_fifo.v(215): (vopt-2685) [TFMPC] - Too few port connections for 'CP_fifo'.  Expected 23, found 22.
-# ** Warning: ../sim/tb_sync_fifo.v(215): (vopt-2718) [TFMPC] - Missing connection for port 'wr_ready'.
-# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=2.
-# Loading work.tb_sync_fifo(fast)
-# Loading work.sync_fifo(fast)
-# Loading work.DPRAM(fast)
-# Loading sv_std.std
-# Loading work.xpm_fifo_sync(fast)
-# Loading work.xpm_fifo_base(fast)
-# Loading work.xpm_fifo_rst(fast)
-# Loading work.xpm_fifo_reg_bit(fast)
-# Loading work.xpm_counter_updn(fast)
-# Loading work.xpm_counter_updn(fast__1)
-# Loading work.xpm_counter_updn(fast__2)
-# Loading work.xpm_memory_base(fast)
-# Loading work.xpm_counter_updn(fast__3)
-#  0123	  0	  0
-#  0224	  1	  0
-#  0123	  2	 0000	  0
-#  0325	  2	  1
-#  0426	  3	  2
-#  0123	  3	 0123	  2
-#  0123	  4	 0123	  3
-#  0527	  4	  3
-#  0628	  4	  4
-#  0123	  4	 0123	  4
-#  0224	  4	 0224	  5
-#  0729	  4	  5
-#  082a	  4	  5
-#  0325	  4	 0325	  5
-#  0426	  4	 0426	  5
-#  092b	  4	  5
-#  0a2c	  4	  5
-#  0527	  4	 0527	  5
-#  0628	  4	 0628	  5
-#  0b2d	  4	  5
-#  0c2e	  4	  5
-#  0729	  4	 0729	  5
-#  082a	  4	 082a	  5
-#  0d2f	  4	  5
-#  0e30	  4	  5
-#  092b	  4	 092b	  5
-#  0a2c	  4	 0a2c	  5
-#  0f31	  4	  5
-#  1032	  4	  5
-#  0b2d	  4	 0b2d	  5
-#  0c2e	  4	 0c2e	  5
-#  1133	  4	  5
-#  1234	  4	  5
-#  0d2f	  4	 0d2f	  5
-#  0e30	  4	 0e30	  5
-#  1335	  4	  5
-#  1436	  4	  5
-#  0f31	  4	 0f31	  5
-#  1032	  4	 1032	  5
-#  1537	  4	  5
-#  1638	  4	  5
-#  1133	  4	 1133	  5
-#  1234	  4	 1234	  5
-#  1739	  4	  5
-#  183a	  4	  5
-#  1335	  4	 1335	  5
-#  1436	  4	 1436	  5
-#  193b	  4	  5
-#  1537	  4	 1537	  5
-#  1638	  3	 1638	  5
-#  1739	  2	 1739	  4
-#  183a	  1	 183a	  3
-#  193b	  0	 193b	  2
-# End time: 22:03:06 on Sep 04,2024, Elapsed time: 0:03:11
-# Errors: 0, Warnings: 2
+# Loading work.tb_spi(fast)
+# Loading work.SPI(fast)
+# Loading work.spi_adi(fast)
+# Loading work.spi_slave(fast)
+# ** Warning: (vsim-3015) [PCDPC] - Port size (10) does not match connection size (1) for port 'rd_addr'. The port definition is at: ../src/Interface/spi_adi.v(13).
+#    Time: 0 ps  Iteration: 0  Instance: /tb_spi/u_spi_adi File: ../sim/tb_spi.v Line: 108
+add wave -position insertpoint  \
+sim:/tb_spi/u_spi_slave/rx_data_d1
+restart
+# Closing VCD file "wave.vcd"
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-8009) Loading existing optimized design _opt3
+# Loading work.tb_spi(fast)
+# Loading work.SPI(fast)
+# Loading work.spi_adi(fast)
+# Loading work.spi_slave(fast)
+# ** Warning: (vsim-3015) [PCDPC] - Port size (10) does not match connection size (1) for port 'rd_addr'. The port definition is at: ../src/Interface/spi_adi.v(13).
+#    Time: 0 ps  Iteration: 0  Instance: /tb_spi/u_spi_adi File: ../sim/tb_spi.v Line: 108
+run 100us
+# End time: 12:14:22 on Sep 21,2024, Elapsed time: 0:01:56
+# Errors: 0, Warnings: 1

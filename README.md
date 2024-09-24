@@ -12,6 +12,8 @@
 
 1. Complete the testing of FIFO addition function
 
+## 2024/09/24
 
+1. Add SPI_SLAVE Interface
 
 
