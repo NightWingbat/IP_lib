@@ -18,62 +18,164 @@
 # vmap work work 
 # Modifying F:\FPGA_Project\IP_lib\modelsim.ini
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 12:12:25 on Sep 21,2024
+# Start time: 23:51:09 on Oct 09,2024
 # vlog -reportprogress 300 -work work ../sim/tb_spi.v 
 # -- Compiling module tb_spi
 # 
 # Top level modules:
 # 	tb_spi
-# End time: 12:12:25 on Sep 21,2024, Elapsed time: 0:00:00
+# End time: 23:51:09 on Oct 09,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 12:12:26 on Sep 21,2024
+# Start time: 23:51:10 on Oct 09,2024
 # vlog -reportprogress 300 -work work ../src/Interface/SPI.v 
 # -- Compiling module SPI
 # 
 # Top level modules:
 # 	SPI
-# End time: 12:12:26 on Sep 21,2024, Elapsed time: 0:00:00
+# End time: 23:51:10 on Oct 09,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 12:12:26 on Sep 21,2024
-# vlog -reportprogress 300 -work work ../src/Interface/spi_adi.v 
-# -- Compiling module spi_adi
-# 
-# Top level modules:
-# 	spi_adi
-# End time: 12:12:26 on Sep 21,2024, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 0
-# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 12:12:26 on Sep 21,2024
+# Start time: 23:51:10 on Oct 09,2024
 # vlog -reportprogress 300 -work work ../src/Interface/spi_slave.v 
 # -- Compiling module spi_slave
 # 
 # Top level modules:
 # 	spi_slave
-# End time: 12:12:26 on Sep 21,2024, Elapsed time: 0:00:00
+# End time: 23:51:10 on Oct 09,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 23:51:10 on Oct 09,2024
+# vlog -reportprogress 300 -work work ../src/memory/PSRAM/hbram_ctrl.v 
+# -- Compiling module hbram_ctrl
+# 
+# Top level modules:
+# 	hbram_ctrl
+# End time: 23:51:10 on Oct 09,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 23:51:10 on Oct 09,2024
+# vlog -reportprogress 300 -work work ../src/memory/FIFO/DPRAM.v 
+# -- Compiling module DPRAM
+# 
+# Top level modules:
+# 	DPRAM
+# End time: 23:51:10 on Oct 09,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 23:51:10 on Oct 09,2024
+# vlog -reportprogress 300 -sv ../src/memory/FIFO/ecc_encode.sv 
+# -- Compiling module ecc_encode
+# 
+# Top level modules:
+# 	ecc_encode
+# End time: 23:51:10 on Oct 09,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 23:51:11 on Oct 09,2024
+# vlog -reportprogress 300 -sv ../src/memory/FIFO/ecc_decode.sv 
+# -- Compiling module ecc_decode
+# 
+# Top level modules:
+# 	ecc_decode
+# End time: 23:51:11 on Oct 09,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 23:51:11 on Oct 09,2024
+# vlog -reportprogress 300 -work work ../src/memory/FIFO/sync_fifo.v 
+# -- Compiling module sync_fifo
+# 
+# Top level modules:
+# 	sync_fifo
+# End time: 23:51:11 on Oct 09,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # vsim -t ps "+notimingchecks" -gui -voptargs=""+acc"" work.tb_spi 
-# Start time: 12:12:26 on Sep 21,2024
+# Start time: 23:51:11 on Oct 09,2024
 # ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Note: (vopt-143) Recognized 1 FSM in module "spi_slave(fast)".
 # Loading work.tb_spi(fast)
 # Loading work.SPI(fast)
-# Loading work.spi_adi(fast)
 # Loading work.spi_slave(fast)
-# ** Warning: (vsim-3015) [PCDPC] - Port size (10) does not match connection size (1) for port 'rd_addr'. The port definition is at: ../src/Interface/spi_adi.v(13).
-#    Time: 0 ps  Iteration: 0  Instance: /tb_spi/u_spi_adi File: ../sim/tb_spi.v Line: 108
-add wave -position insertpoint  \
-sim:/tb_spi/u_spi_slave/rx_data_d1
-restart
-# Closing VCD file "wave.vcd"
-# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
-# ** Note: (vsim-8009) Loading existing optimized design _opt3
-# Loading work.tb_spi(fast)
-# Loading work.SPI(fast)
-# Loading work.spi_adi(fast)
-# Loading work.spi_slave(fast)
-# ** Warning: (vsim-3015) [PCDPC] - Port size (10) does not match connection size (1) for port 'rd_addr'. The port definition is at: ../src/Interface/spi_adi.v(13).
-#    Time: 0 ps  Iteration: 0  Instance: /tb_spi/u_spi_adi File: ../sim/tb_spi.v Line: 108
-run 100us
-# End time: 12:14:22 on Sep 21,2024, Elapsed time: 0:01:56
+# Loading work.sync_fifo(fast)
+# Loading work.DPRAM(fast)
+# ** Warning: (vsim-3015) [PCDPC] - Port size (552) does not match connection size (8) for port 'rx_data'. The port definition is at: ../src/Interface/SPI.v(64).
+#    Time: 0 ps  Iteration: 0  Instance: /tb_spi/u_SPI File: ../sim/tb_spi.v Line: 281
+# Causality operation skipped due to absence of debug database file
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
+# End time: 23:59:15 on Oct 09,2024, Elapsed time: 0:08:04
 # Errors: 0, Warnings: 1

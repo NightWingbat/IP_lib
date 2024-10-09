@@ -16,4 +16,6 @@
 
 1. Add SPI_SLAVE Interface
 
+## 2024/10/10
 
+1. Debug SPI_SLAVE and FIFO Interface

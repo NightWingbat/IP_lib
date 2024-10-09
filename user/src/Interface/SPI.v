@@ -48,9 +48,9 @@ module SPI #(
     //The width parameter for writing data
     parameter    DATA_WIDTH = 24,
     //system clock frequency
-    parameter    CLK_FREQ   = 26'd50_000_000,
+    parameter    CLK_FREQ   = 28'd50_000_000,
     //spi sclk frequency
-    parameter    SPI_FREQ   = 26'd400_000
+    parameter    SPI_FREQ   = 28'd400_000
 ) (
     //system clock input
     input                           clock,
@@ -137,11 +137,16 @@ always @(posedge clock or posedge reset) begin
     if(reset == 1'b1)begin
       bit_cnt <= 1'b0;
     end
-    else if(bit_cnt == DATA_WIDTH - 1 && sclk_cnt == CNT - 1)begin
-      bit_cnt <= 1'b0;
-    end
-    else if(sclk_cnt == CNT - 1)begin
-      bit_cnt <= bit_cnt + 1'b1;
+    else if(state_now == START)begin
+      if(bit_cnt == DATA_WIDTH - 1 && sclk_cnt == CNT - 1)begin
+        bit_cnt <= 1'b0;
+      end
+      else if(sclk_cnt == CNT - 1)begin
+        bit_cnt <= bit_cnt + 1'b1;
+      end
+      else begin
+        bit_cnt <= bit_cnt;
+      end
     end
     else begin
       bit_cnt <= bit_cnt;

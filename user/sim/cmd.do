@@ -7,11 +7,13 @@ vmap work work
 
 vlog -work work ../sim/tb_spi.v
 vlog -work work ../src/Interface/SPI.v
-vlog -work work ../src/Interface/spi_adi.v
+# vlog -work work ../src/Interface/spi_adi.v
 vlog -work work ../src/Interface/spi_slave.v
-# vlog -work work ../src/memory/FIFO/DPRAM.v
-# vlog -sv        ../src/memory/FIFO/ecc_encode.sv
-# vlog -sv        ../src/memory/FIFO/ecc_decode.sv
+vlog -work work ../src/memory/PSRAM/hbram_ctrl.v
+vlog -work work ../src/memory/FIFO/DPRAM.v
+vlog -sv        ../src/memory/FIFO/ecc_encode.sv
+vlog -sv        ../src/memory/FIFO/ecc_decode.sv
+vlog -work work ../src/memory/FIFO/sync_fifo.v
 # vlog -sv        ../sim/xpm_fifo.sv
 # vlog -sv        ../sim/xpm_memory.sv
 
@@ -42,24 +44,43 @@ add wave /tb_spi/u_SPI/bit_cnt
 add wave /tb_spi/u_SPI/sample_edge
 add wave /tb_spi/u_SPI/toggle_edge
 
-add wave -divider {spi_adi}
+# add wave -divider {spi_adi}
 
-add wave -color {yellow} /tb_spi/wr_end
-add wave -color {yellow} /tb_spi/spi_clk
-add wave -color {yellow} /tb_spi/spi_enb
-add wave -color {yellow} /tb_spi/spi_di
+# add wave -color {yellow} /tb_spi/wr_end
+# add wave -color {yellow} /tb_spi/spi_clk
+# add wave -color {yellow} /tb_spi/spi_enb
+# add wave -color {yellow} /tb_spi/spi_di
 
-add wave -color {yellow} /tb_spi/u_spi_adi/div_clk
-add wave -color {yellow} /tb_spi/u_spi_adi/wr_state
-add wave -color {yellow} /tb_spi/u_spi_adi/wr_cnt
-add wave -color {yellow} /tb_spi/u_spi_adi/wr_en
+# add wave -color {yellow} /tb_spi/u_spi_adi/div_clk
+# add wave -color {yellow} /tb_spi/u_spi_adi/wr_state
+# add wave -color {yellow} /tb_spi/u_spi_adi/wr_cnt
+# add wave -color {yellow} /tb_spi/u_spi_adi/wr_en
 
 add wave -divider {spi_slave}
 
-add wave /tb_spi/slave_rx_data
-add wave /tb_spi/slave_done
-add wave /tb_spi/u_spi_slave/spi_ce
-add wave /tb_spi/u_spi_slave/spi_sclk
+add wave -color {yellow} /tb_spi/hbc_cal_pass
+add wave -color {yellow} /tb_spi/slave_tx_valid
+add wave -color {yellow} /tb_spi/slave_tx_data
+add wave -color {yellow} /tb_spi/ctrl
+add wave -color {yellow} /tb_spi/address
+add wave -color {yellow} /tb_spi/slave_tx_en
+add wave -color {yellow} /tb_spi/slave_rx_en
+add wave -color {yellow} /tb_spi/slave_rx_data
+add wave -color {yellow} /tb_spi/slave_done
+
+add wave -divider {u_spi_slave}
+
+add wave -color {orange} /tb_spi/u_spi_slave/state_now
+
+add wave -color {orange} /tb_spi/u_spi_slave/ctrl_d1
+add wave -color {orange} /tb_spi/u_spi_slave/ctrl_cnt
+
+add wave -color {orange} /tb_spi/u_spi_slave/addr_d1
+add wave -color {orange} /tb_spi/u_spi_slave/addr_cnt
+
+add wave -color {orange} /tb_spi/u_spi_slave/rx_data_d1
+add wave -color {orange} /tb_spi/u_spi_slave/data_cnt
+add wave -color {orange} /tb_spi/u_spi_slave/data_len
 
 # add wave -divider {wr_port}
 
@@ -101,4 +122,4 @@ add wave /tb_spi/u_spi_slave/spi_sclk
 
 # 启动仿真
 
-run 100us
+run 1ms

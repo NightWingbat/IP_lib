@@ -20,23 +20,13 @@ n@_opt
 Z3 OL;O;2020.4;71
 R0
 T_opt2
-!s110 1725458397
-V;laV9W;cM64l[A7G=640Y1
-04 12 4 work tb_sync_fifo fast 0
-=1-d4e98a6083c1-66d867dc-3d1-5e98
+!s110 1728489073
+VV`HoFOZ_i0Eb0]jk>0^0@2
+04 6 4 work tb_spi fast 0
+=1-d4e98a6083c1-6706a670-21d-83c0
 R1
 R2
 n@_opt2
-R3
-R0
-T_opt3
-!s110 1726891947
-VLSEjA`<zSSd?;jRz<A@Rf2
-04 6 4 work tb_spi fast 0
-=1-d4e98a6083c1-66ee47aa-32d-a258
-R1
-R2
-n@_opt3
 R3
 vasym_bwe_bb
 Z4 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
@@ -87,7 +77,7 @@ Z17 !s108 1724854121.000000
 Z18 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
 R2
 vDPRAM
-R5
+Z19 !s110 1728489070
 !i10b 1
 !s100 lQ4JTM0@WSYRX?7KoQ1K`2
 R6
@@ -96,14 +86,14 @@ R0
 w1719922286
 8../src/memory/FIFO/DPRAM.v
 F../src/memory/FIFO/DPRAM.v
-!i122 1232
+!i122 1537
 L0 41 62
 R10
 R11
 r1
 !s85 0
 31
-R12
+Z20 !s108 1728489070.000000
 !s107 ../src/memory/FIFO/DPRAM.v|
 !s90 -reportprogress|300|-work|work|../src/memory/FIFO/DPRAM.v|
 !i113 0
@@ -112,7 +102,7 @@ R2
 n@d@p@r@a@m
 vecc_decode
 R4
-R5
+Z21 !s110 1728489071
 !i10b 1
 !s100 L>VR7oRf5XaV_f5WfmD^^3
 R6
@@ -122,14 +112,14 @@ R0
 w1725107175
 8../src/memory/FIFO/ecc_decode.sv
 F../src/memory/FIFO/ecc_decode.sv
-!i122 1234
+!i122 1539
 L0 40 92
 R10
 R11
 r1
 !s85 0
 31
-R12
+Z22 !s108 1728489071.000000
 !s107 ../src/memory/FIFO/ecc_decode.sv|
 !s90 -reportprogress|300|-sv|../src/memory/FIFO/ecc_decode.sv|
 !i113 0
@@ -137,7 +127,7 @@ R15
 R2
 vecc_encode
 R4
-R5
+R19
 !i10b 1
 !s100 RLLMgbN:]9kAHI2SCen_Y0
 R6
@@ -147,37 +137,60 @@ R0
 w1725097891
 8../src/memory/FIFO/ecc_encode.sv
 F../src/memory/FIFO/ecc_encode.sv
-!i122 1233
+!i122 1538
 L0 40 51
 R10
 R11
 r1
 !s85 0
 31
-R12
+R20
 !s107 ../src/memory/FIFO/ecc_encode.sv|
 !s90 -reportprogress|300|-sv|../src/memory/FIFO/ecc_encode.sv|
 !i113 0
 R15
 R2
-vSPI
-Z19 !s110 1726891946
+vhbram_ctrl
+R19
 !i10b 1
-!s100 ckRVVU?A[KTzI9[TCOQ=22
+!s100 o:m[aYCk2HM_eBjjCI:bG2
 R6
-I[j6ocYO>hB2mIl1oT5Ybg0
+I_?:O>7<jaYM1ziRYRWRS@2
 R0
-w1725626828
-8../src/Interface/SPI.v
-F../src/Interface/SPI.v
-!i122 1314
-L0 41 359
+w1728291546
+8../src/memory/PSRAM/hbram_ctrl.v
+F../src/memory/PSRAM/hbram_ctrl.v
+!i122 1536
+L0 42 177
 R10
 R11
 r1
 !s85 0
 31
-Z20 !s108 1726891946.000000
+R20
+!s107 ../src/memory/PSRAM/hbram_ctrl.v|
+!s90 -reportprogress|300|-work|work|../src/memory/PSRAM/hbram_ctrl.v|
+!i113 0
+R18
+R2
+vSPI
+R19
+!i10b 1
+!s100 ^X2HWB?[S0cSA7M<e@Mdj0
+R6
+INS9H3URPJ@F9<WTMC]KKk0
+R0
+w1728444396
+8../src/Interface/SPI.v
+F../src/Interface/SPI.v
+!i122 1534
+L0 41 364
+R10
+R11
+r1
+!s85 0
+31
+R20
 !s107 ../src/Interface/SPI.v|
 !s90 -reportprogress|300|-work|work|../src/Interface/SPI.v|
 !i113 0
@@ -185,7 +198,7 @@ R18
 R2
 n@s@p@i
 vspi_adi
-R19
+!s110 1726891946
 !i10b 1
 !s100 Mfli^3KS5ffUlnO4@g]ka0
 R6
@@ -201,7 +214,7 @@ R11
 r1
 !s85 0
 31
-R20
+!s108 1726891946.000000
 !s107 ../src/Interface/spi_adi.v|
 !s90 -reportprogress|300|-work|work|../src/Interface/spi_adi.v|
 !i113 0
@@ -210,15 +223,15 @@ R2
 vspi_slave
 R19
 !i10b 1
-!s100 omUT@El<V1kbFfC8hlNz=1
+!s100 1>kS<bQHJ>XQcJAQ_]REZ1
 R6
-IaRBM4:ff2XfNl<?j5DTDl2
+I;@HYDK7fGjIZ<jhaH:C@;0
 R0
-w1726891884
+w1728489056
 8../src/Interface/spi_slave.v
 F../src/Interface/spi_slave.v
-!i122 1316
-L0 1 189
+!i122 1535
+L0 42 534
 R10
 R11
 r1
@@ -231,7 +244,7 @@ R20
 R18
 R2
 vsync_fifo
-R5
+R21
 !i10b 1
 !s100 IDYHmIW26nn6ZG8lYYo;n2
 R6
@@ -240,21 +253,21 @@ R0
 w1725450442
 8../src/memory/FIFO/sync_fifo.v
 F../src/memory/FIFO/sync_fifo.v
-!i122 1231
+!i122 1540
 L0 50 997
 R10
 R11
 r1
 !s85 0
 31
-!s108 1725458394.000000
+R22
 !s107 ../src/memory/FIFO/sync_fifo.v|
 !s90 -reportprogress|300|-work|work|../src/memory/FIFO/sync_fifo.v|
 !i113 0
 R18
 R2
 vsync_fifo_test
-Z21 !s110 1724661477
+Z23 !s110 1724661477
 !i10b 1
 !s100 3ecKU@o_d3SI;Jj:aZZla1
 R6
@@ -270,7 +283,7 @@ R11
 r1
 !s85 0
 31
-Z22 !s108 1724661477.000000
+Z24 !s108 1724661477.000000
 !s107 ../src/memory/sync_fifo_test.v|
 !s90 -reportprogress|300|-work|work|../src/memory/sync_fifo_test.v|
 !i113 0
@@ -300,23 +313,23 @@ R17
 R18
 R2
 vtb_spi
-!s110 1726891945
+!s110 1728489069
 !i10b 1
-!s100 WFAXoG9W`i9cHCV3^Wl]E3
+!s100 _UCGGY8Fi67jJ9igm18XE3
 R6
-IQ4z[C9cl95_[o_?0nk4P11
+I`Dfn1SX2Z]<3N?d@Ra4`Y3
 R0
-w1726891565
+w1728482591
 8../sim/tb_spi.v
 F../sim/tb_spi.v
-!i122 1313
-L0 3 153
+!i122 1533
+L0 3 420
 R10
 R11
 r1
 !s85 0
 31
-!s108 1726891945.000000
+!s108 1728489069.000000
 !s107 ../sim/tb_spi.v|
 !s90 -reportprogress|300|-work|work|../sim/tb_spi.v|
 !i113 0
@@ -346,7 +359,7 @@ r1
 R18
 R2
 vtestbench
-R21
+R23
 !i10b 1
 !s100 8f8Mc1dASSFe^Bo[UXI=Y1
 R6
@@ -362,7 +375,7 @@ R11
 r1
 !s85 0
 31
-R22
+R24
 !s107 ../sim/testbench.v|
 !s90 -reportprogress|300|-work|work|../sim/testbench.v|
 !i113 0
@@ -378,8 +391,8 @@ IeFL]GBl7AWnmPMD5h7N:02
 S1
 R0
 R7
-Z23 8../sim/xpm_fifo.sv
-Z24 F../sim/xpm_fifo.sv
+Z25 8../sim/xpm_fifo.sv
+Z26 F../sim/xpm_fifo.sv
 !i122 1235
 L0 1733 22
 R10
@@ -388,8 +401,8 @@ r1
 !s85 0
 31
 R12
-Z25 !s107 ../sim/xpm_fifo.sv|
-Z26 !s90 -reportprogress|300|-sv|../sim/xpm_fifo.sv|
+Z27 !s107 ../sim/xpm_fifo.sv|
+Z28 !s90 -reportprogress|300|-sv|../sim/xpm_fifo.sv|
 !i113 0
 R15
 R2
@@ -403,8 +416,8 @@ IWoK88@j5c?2Gk2R?mMeKU0
 S1
 R0
 R7
-R23
-R24
+R25
+R26
 !i122 1235
 L0 2016 185
 R10
@@ -413,8 +426,8 @@ r1
 !s85 0
 31
 R12
-R25
-R26
+R27
+R28
 !i113 0
 R15
 R2
@@ -428,8 +441,8 @@ IYVniMlaOBM5fU3YDM>jVN3
 S1
 R0
 R7
-R23
-R24
+R25
+R26
 !i122 1235
 L0 4657 195
 R10
@@ -438,8 +451,8 @@ r1
 !s85 0
 31
 R12
-R25
-R26
+R27
+R28
 !i113 0
 R15
 R2
@@ -453,8 +466,8 @@ IMdcl1>M985W0fL9zV2]T:1
 S1
 R0
 R7
-R23
-R24
+R25
+R26
 !i122 1235
 L0 2675 1168
 R10
@@ -463,8 +476,8 @@ r1
 !s85 0
 31
 R12
-R25
-R26
+R27
+R28
 !i113 0
 R15
 R2
@@ -478,8 +491,8 @@ IlN5Y:?`^ZATQDJKX5Cj_z2
 S1
 R0
 R7
-R23
-R24
+R25
+R26
 !i122 1235
 L0 3849 807
 R10
@@ -488,8 +501,8 @@ r1
 !s85 0
 31
 R12
-R25
-R26
+R27
+R28
 !i113 0
 R15
 R2
@@ -503,8 +516,8 @@ IKO?_CgBNjkZ5cg=nDA20W3
 S1
 R0
 R7
-R23
-R24
+R25
+R26
 !i122 1235
 L0 2208 460
 R10
@@ -513,8 +526,8 @@ r1
 !s85 0
 31
 R12
-R25
-R26
+R27
+R28
 !i113 0
 R15
 R2
@@ -528,8 +541,8 @@ IV:7joE5l1<C>7dmJ3Wk1L1
 S1
 R0
 R7
-R23
-R24
+R25
+R26
 !i122 1235
 L0 56 1445
 R10
@@ -538,8 +551,8 @@ r1
 !s85 0
 31
 R12
-R25
-R26
+R27
+R28
 !i113 0
 R15
 R2
@@ -553,8 +566,8 @@ I=VC;KHUSMohPZX7fS3d0;2
 S1
 R0
 R7
-R23
-R24
+R25
+R26
 !i122 1235
 L0 1781 16
 R10
@@ -563,8 +576,8 @@ r1
 !s85 0
 31
 R12
-R25
-R26
+R27
+R28
 !i113 0
 R15
 R2
@@ -578,8 +591,8 @@ I:l^e40HRG75F^V1U[k>083
 S1
 R0
 R7
-R23
-R24
+R25
+R26
 !i122 1235
 L0 1759 18
 R10
@@ -588,8 +601,8 @@ r1
 !s85 0
 31
 R12
-R25
-R26
+R27
+R28
 !i113 0
 R15
 R2
@@ -603,8 +616,8 @@ I?X3;JUTI55mJehi;gbK7B2
 S1
 R0
 R7
-R23
-R24
+R25
+R26
 !i122 1235
 L0 1504 219
 R10
@@ -613,8 +626,8 @@ r1
 !s85 0
 31
 R12
-R25
-R26
+R27
+R28
 !i113 0
 R15
 R2
@@ -628,8 +641,8 @@ ILfAOVmK^3B9`S>UClERe32
 S1
 R0
 R7
-R23
-R24
+R25
+R26
 !i122 1235
 L0 1826 183
 R10
@@ -638,8 +651,8 @@ r1
 !s85 0
 31
 R12
-R25
-R26
+R27
+R28
 !i113 0
 R15
 R2
@@ -828,8 +841,8 @@ I@EL_V8VHE_0eGRiGjZ^Y32
 S1
 R0
 R7
-R23
-R24
+R25
+R26
 !i122 1235
 L0 1800 21
 R10
@@ -838,8 +851,8 @@ r1
 !s85 0
 31
 R12
-R25
-R26
+R27
+R28
 !i113 0
 R15
 R2
