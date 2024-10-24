@@ -55,9 +55,9 @@ module spi_slave #(
     //Burst read or write length
     parameter    LEN_WIDTH  = 32,
     //SPI write command
-    parameter    CTRL_WRITE = 1'b1, // @suppress "Parameter 'CTRL_WRITE' is never used locally"
+    parameter    CTRL_WRITE = 8'h3a, // @suppress "Parameter 'CTRL_WRITE' is never used locally"
     //SPI read  command
-    parameter    CTRL_READ  = 1'b0 // @suppress "Parameter 'CTRL_READ' is never used locally"
+    parameter    CTRL_READ  = 8'h3b // @suppress "Parameter 'CTRL_READ' is never used locally"
 ) (
     //system clock input
     input                           clock,  // @suppress "Port 'clock' is never used locally"
@@ -408,13 +408,13 @@ always @(posedge clock or posedge reset) begin
       ctrl_d1    <= 1'b0;
       addr_d1    <= 1'b0;
       rx_data_d1 <= 1'b0;
-      miso       <= 1'b0;
+      //miso       <= 1'b0;
   end
   else if(spi_ce != CE_LEVEL)begin
       ctrl_d1    <= 1'b0;
       addr_d1    <= 1'b0;
       rx_data_d1 <= 1'b0;
-      miso       <= 1'bz;
+      //miso       <= 1'b0;
   end
   else begin
       case(state_now)
@@ -423,11 +423,11 @@ always @(posedge clock or posedge reset) begin
               ctrl_d1    <= 1'b0;
               addr_d1    <= 1'b0;
               rx_data_d1 <= 1'b0;
-              miso       <= 1'bz;
+              //miso       <= 1'b0;
           end
 
           CTRL:begin
-              miso         <= 1'bz;
+              //miso         <= 1'b0;
               if(sample_edge)begin
                   ctrl_d1[CTRL_WIDTH - 1 - ctrl_cnt]    <= spi_mosi;
               end
@@ -437,7 +437,7 @@ always @(posedge clock or posedge reset) begin
           end
 
           ADDR:begin
-              miso         <= 1'bz;
+              //miso         <= 1'b0;
               if(sample_edge)begin
                   addr_d1[ADDR_WIDTH - 1 - addr_cnt]    <= spi_mosi;
               end
@@ -447,7 +447,7 @@ always @(posedge clock or posedge reset) begin
           end
 
           WRITE:begin
-            miso         <= 1'bz;
+            //miso         <= 1'b0;
             if(sample_edge)begin
                 rx_data_d1[DATA_WIDTH - 1 - data_cnt] <= spi_mosi;
             end
@@ -456,31 +456,73 @@ always @(posedge clock or posedge reset) begin
             end
           end
 
-          READ:begin
-              if(sample_edge)begin
-                  miso <= tx_data[DATA_WIDTH - 1 - data_cnt];
-              end
-              else begin
-                  miso <= miso;
-              end
-          end
+        //   READ:begin
+        //       if(sample_edge)begin
+        //           miso <= tx_data[DATA_WIDTH - 1 - data_cnt];
+        //       end
+        //       else begin
+        //           miso <= miso;
+        //       end
+        //   end
 
           STOP:begin
               ctrl_d1    <= 1'b0;
               addr_d1    <= 1'b0;
               rx_data_d1 <= 1'b0;
-              miso       <= 1'bz;
+              //miso       <= 1'b0;
           end
 
           default:begin
               ctrl_d1    <= 1'b0;
               addr_d1    <= 1'b0;
               rx_data_d1 <= 1'b0;
-              miso       <= 1'b0;
+              //miso       <= 1'b0;
           end
 
       endcase
   end
+end
+
+always @(*) begin
+    if(reset == 1'b1)begin
+        miso <= 1'b0;
+    end
+    else if(spi_ce != CE_LEVEL)begin
+        miso <= 1'b0;
+  end
+    else begin
+        case(state_now)
+
+          IDLE:begin
+                miso <= 1'b0;
+          end
+
+          CTRL:begin
+                miso <= 1'b0;
+          end
+
+          ADDR:begin
+                miso <= 1'b0;
+          end
+
+          WRITE:begin
+                miso <= 1'b0;
+          end
+
+          READ:begin
+                miso <= tx_data[DATA_WIDTH - 1 - data_cnt];
+          end
+
+          STOP:begin
+                miso <= 1'b0;
+          end
+
+          default:begin
+                miso <= 1'b0;
+          end
+
+      endcase
+    end
 end
 
 always @(posedge clock or posedge reset) begin

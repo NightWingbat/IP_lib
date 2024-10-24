@@ -28,7 +28,7 @@
 */
 
 // wavedom
-/* @wavedrom 
+/*  
 {signal: [
   {name: 'clock', wave: '010101010101010101'},
   {name: 'reset', wave: '1.0...............'},
@@ -211,7 +211,7 @@ end
 //mark the position of writing,use gray code counter
 always @(posedge clock or negedge sys_rst) begin
     if(sys_rst == 1'b0)begin
-        wr_ptr_d1 <= 1'b0;
+        wr_ptr_d1 <= 0;
     end
     else if(wr_en & (~full))begin
         wr_ptr_d1 <= wr_ptr[$clog2(WR_DEPTH) - 2 : 0];
@@ -223,7 +223,10 @@ end
 
 always @(posedge clock or negedge sys_rst) begin
     if(sys_rst == 1'b0)begin
-        wr_ptr <= 1'b0;
+        wr_ptr[0]                  <= 1'b0;
+        wr_ptr[1]                  <= 1'b0;
+        wr_ptr[$clog2(WR_DEPTH)-1] <= 1'b0;
+        wr_ptr[$clog2(WR_DEPTH)]   <= 1'b0;
     end
     else if(wr_en & (~full))begin
         wr_ptr[0]                  <= (~(wr_ptr_d1[0] ^ wr_ptr[0]))? ~wr_ptr[0] : wr_ptr[0];
@@ -232,7 +235,10 @@ always @(posedge clock or negedge sys_rst) begin
         wr_ptr[$clog2(WR_DEPTH)]   <= (wr_ptr[$clog2(WR_DEPTH)-1] & ~(|wr_ptr[$clog2(WR_DEPTH)-2:0]))? ~wr_ptr[$clog2(WR_DEPTH)] : wr_ptr[$clog2(WR_DEPTH)];
     end
     else begin
-        wr_ptr <= wr_ptr;
+        wr_ptr[0]                  <= wr_ptr[0];
+        wr_ptr[1]                  <= wr_ptr[1];
+        wr_ptr[$clog2(WR_DEPTH)-1] <= wr_ptr[$clog2(WR_DEPTH)-1];
+        wr_ptr[$clog2(WR_DEPTH)]   <= wr_ptr[$clog2(WR_DEPTH)];
     end
 end
 
@@ -246,23 +252,24 @@ generate for(m=2;m<$clog2(WR_DEPTH)-1;m=m+1)begin : WR_GRAY_COUNTER
             wr_ptr[m] <= 1'b0;
         end
         else if(wr_en & (~full))begin
-            if(~(wr_ptr_d1[m]^wr_ptr[m]) & wr_ptr[m-1] & ~(|wr_ptr[m-2:0]))
+            if(~(wr_ptr_d1[m]^wr_ptr[m]) & wr_ptr[m-1] & ~(|wr_ptr[m-2:0]))begin
                 wr_ptr[m] <= ~wr_ptr[m];
-            else 
+            end
+            else begin
                 wr_ptr[m] <= wr_ptr[m];
+            end
         end
         else begin
             wr_ptr[m] <= wr_ptr[m];
         end
     end
-
 end
 endgenerate
 
 //when in standard mode,mark the position of reading,use gray code counter
 always @(posedge clock or negedge sys_rst) begin
     if(sys_rst == 1'b0)begin
-        rd_ptr_d1 <= 1'b0;
+        rd_ptr_d1 <= 0;
     end
     else if(rd_en & (~empty))begin
         rd_ptr_d1 <= rd_ptr[$clog2(RD_DEPTH) - 2 : 0];
@@ -274,16 +281,16 @@ end
 
 always @(posedge clock or negedge sys_rst) begin
     if(sys_rst == 1'b0)begin
-        rd_ptr <= 1'b0;
+        rd_ptr[0]                  <= 0;
+        rd_ptr[1]                  <= 0;
+        rd_ptr[$clog2(RD_DEPTH)-1] <= 0;
+        rd_ptr[$clog2(RD_DEPTH)]   <= 0;
     end
     else if(rd_en & (~empty))begin
         rd_ptr[0]                  <= (~(rd_ptr_d1[0] ^ rd_ptr[0]))? ~rd_ptr[0] : rd_ptr[0];
         rd_ptr[1]                  <= (~(rd_ptr_d1[1] ^ rd_ptr[1]) & rd_ptr[0]) ? ~rd_ptr[1] : rd_ptr[1];
         rd_ptr[$clog2(RD_DEPTH)-1] <= ((rd_ptr[$clog2(RD_DEPTH)-1] ^ rd_ptr[$clog2(RD_DEPTH)-2]) & (~(|rd_ptr[$clog2(RD_DEPTH)-3:0]))) ? ~rd_ptr[$clog2(RD_DEPTH)-1] : rd_ptr[$clog2(RD_DEPTH)-1];
         rd_ptr[$clog2(RD_DEPTH)]   <= (rd_ptr[$clog2(RD_DEPTH)-1] & ~(|rd_ptr[$clog2(RD_DEPTH)-2:0]))? ~rd_ptr[$clog2(RD_DEPTH)] : rd_ptr[$clog2(RD_DEPTH)];
-    end
-    else begin
-        rd_ptr <= rd_ptr;
     end
 end
 
@@ -302,7 +309,10 @@ end
 
 always @(posedge clock or negedge sys_rst) begin
     if(sys_rst == 1'b0)begin
-        rd_ptr_next                     <= 1'b0;
+        rd_ptr_next[0]                  <= 0;
+        rd_ptr_next[1]                  <= 0;
+        rd_ptr_next[$clog2(RD_DEPTH)-1] <= 0;
+        rd_ptr_next[$clog2(RD_DEPTH)]   <= 0;
     end
     else if((rd_en | pre_read) & (~empty))begin
         rd_ptr_next[0]                  <= (~(rd_ptr_next_d1[0] ^ rd_ptr_next[0]))? ~rd_ptr_next[0] : rd_ptr_next[0];

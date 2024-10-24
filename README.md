@@ -19,3 +19,7 @@
 ## 2024/10/10
 
 1. Debug SPI_SLAVE and FIFO Interface
+
+## 0.0.1
+
+1. Complete the joint debugging of SPI_Slave and FIFO to achieve data read and write of CH347, but the clock rate is only 15MHz

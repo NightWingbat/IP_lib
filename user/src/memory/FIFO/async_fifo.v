@@ -221,7 +221,7 @@ end
 //mark the position of writing,use gray code counter
 always @(posedge wr_clock or negedge wr_rst) begin
     if(wr_rst == 1'b0)begin
-        wr_ptr_d1 <= 1'b0;
+        wr_ptr_d1 <= 0;
     end
     else if(wr_en & (~full))begin
         wr_ptr_d1 <= wr_ptr[$clog2(WR_DEPTH) - 2 : 0];
@@ -233,16 +233,16 @@ end
 
 always @(posedge wr_clock or negedge wr_rst) begin
     if(wr_rst == 1'b0)begin
-        wr_ptr <= 1'b0;
+        wr_ptr[0]                  <= 0;
+        wr_ptr[1]                  <= 0; 
+        wr_ptr[$clog2(WR_DEPTH)-1] <= 0; 
+        wr_ptr[$clog2(WR_DEPTH)]   <= 0;
     end
     else if(wr_en & (~full))begin
         wr_ptr[0]                  <= (~(wr_ptr_d1[0] ^ wr_ptr[0]))? ~wr_ptr[0] : wr_ptr[0];
         wr_ptr[1]                  <= (~(wr_ptr_d1[1] ^ wr_ptr[1]) & wr_ptr[0]) ? ~wr_ptr[1] : wr_ptr[1];
         wr_ptr[$clog2(WR_DEPTH)-1] <= (wr_ptr[$clog2(WR_DEPTH)-1] ^ wr_ptr[$clog2(WR_DEPTH)-2]) & ~(|wr_ptr[$clog2(WR_DEPTH)-3:0])? ~wr_ptr[$clog2(WR_DEPTH)-1] : wr_ptr[$clog2(WR_DEPTH)-1];
         wr_ptr[$clog2(WR_DEPTH)]   <= (wr_ptr[$clog2(WR_DEPTH)-1] & ~(|wr_ptr[$clog2(WR_DEPTH)-2:0]))? ~wr_ptr[$clog2(WR_DEPTH)] : wr_ptr[$clog2(WR_DEPTH)];
-    end
-    else begin
-        wr_ptr <= wr_ptr;
     end
 end
 
@@ -256,13 +256,12 @@ generate for(m=2;m<$clog2(WR_DEPTH)-1;m=m+1)begin : WR_GRAY_COUNTER
             wr_ptr[m] <= 1'b0;
         end
         else if(wr_en & (~full))begin
-            if(~(wr_ptr_d1[m]^wr_ptr[m]) & wr_ptr[m-1] & ~(|wr_ptr[m-2:0]))
+            if(~(wr_ptr_d1[m]^wr_ptr[m]) & wr_ptr[m-1] & ~(|wr_ptr[m-2:0]))begin
                 wr_ptr[m] <= ~wr_ptr[m];
-            else 
+            end
+            else begin
                 wr_ptr[m] <= wr_ptr[m];
-        end
-        else begin
-            wr_ptr[m] <= wr_ptr[m];
+            end
         end
     end
 
@@ -272,19 +271,19 @@ endgenerate
 //mark the position of reading,use gray code counter
 always @(posedge rd_clock or negedge rd_rst) begin
     if(rd_rst == 1'b0)begin
-        rd_ptr_d1 <= 1'b0;
+        rd_ptr_d1 <= 0;
     end
     else if(rd_en & (~empty))begin
         rd_ptr_d1 <= rd_ptr[$clog2(RD_DEPTH) - 2 : 0];
-    end
-    else begin
-        rd_ptr_d1 <= rd_ptr_d1;
     end
 end
 
 always @(posedge rd_clock or negedge rd_rst) begin
     if(rd_rst == 1'b0)begin
-        rd_ptr <= 1'b0;
+        rd_ptr[0]                  <= 0;
+        rd_ptr[1]                  <= 0;
+        rd_ptr[$clog2(RD_DEPTH)-1] <= 0;
+        rd_ptr[$clog2(RD_DEPTH)]   <= 0;
     end
     else if(rd_en & (~empty))begin
         rd_ptr[0]                  <= (~(rd_ptr_d1[0] ^ rd_ptr[0]))? ~rd_ptr[0] : rd_ptr[0];
@@ -292,27 +291,24 @@ always @(posedge rd_clock or negedge rd_rst) begin
         rd_ptr[$clog2(RD_DEPTH)-1] <= ((rd_ptr[$clog2(RD_DEPTH)-1] ^ rd_ptr[$clog2(RD_DEPTH)-2]) & (~(|rd_ptr[$clog2(RD_DEPTH)-3:0]))) ? ~rd_ptr[$clog2(RD_DEPTH)-1] : rd_ptr[$clog2(RD_DEPTH)-1];
         rd_ptr[$clog2(RD_DEPTH)]   <= (rd_ptr[$clog2(RD_DEPTH)-1] & ~(|rd_ptr[$clog2(RD_DEPTH)-2:0]))? ~rd_ptr[$clog2(RD_DEPTH)] : rd_ptr[$clog2(RD_DEPTH)];
     end
-    else begin
-        rd_ptr <= rd_ptr;
-    end
 end
 
 //when in fwft mode,rd_ptr need to add one to pre-extract from fifo,use gray code counter
 always @(posedge rd_clock or negedge rd_rst) begin
     if(rd_rst == 1'b0)begin
-        rd_ptr_next_d1 <= 1'b0;
+        rd_ptr_next_d1 <= 0;
     end
     else if((rd_en | pre_read) & (~empty))begin
         rd_ptr_next_d1 <= rd_ptr_next[$clog2(RD_DEPTH) - 2 : 0];
-    end
-    else begin
-        rd_ptr_next_d1 <= rd_ptr_next_d1;
     end
 end
 
 always @(posedge rd_clock or negedge rd_rst) begin
     if(rd_rst == 1'b0)begin
-        rd_ptr_next                     <= 1'b0;
+        rd_ptr_next[0]                  <= 0;
+        rd_ptr_next[1]                  <= 0;
+        rd_ptr_next[$clog2(RD_DEPTH)-1] <= 0;
+        rd_ptr_next[$clog2(RD_DEPTH)]   <= 0;
     end
     else if((rd_en | pre_read) & (~empty))begin
         rd_ptr_next[0]                  <= (~(rd_ptr_next_d1[0] ^ rd_ptr_next[0]))? ~rd_ptr_next[0] : rd_ptr_next[0];
@@ -332,13 +328,12 @@ generate for(j=2;j<$clog2(RD_DEPTH)-1;j=j+1) begin : RD_GRAY_COUNTER
             rd_ptr[j] <= 1'b0;
         end
         else if(rd_en & (~empty))begin
-            if(~(rd_ptr_d1[j] ^ rd_ptr[j]) & rd_ptr[j-1] & ~(|rd_ptr[j-2:0]))
+            if(~(rd_ptr_d1[j] ^ rd_ptr[j]) & rd_ptr[j-1] & ~(|rd_ptr[j-2:0]))begin
                 rd_ptr[j] <= ~rd_ptr[j];
-            else 
+            end
+            else begin
                 rd_ptr[j] <= rd_ptr[j];
-        end
-        else begin
-            rd_ptr[j] <= rd_ptr[j];
+            end 
         end
     end
 
@@ -348,13 +343,12 @@ generate for(j=2;j<$clog2(RD_DEPTH)-1;j=j+1) begin : RD_GRAY_COUNTER
             rd_ptr_next[j] <= 1'b0;
         end
         else if((rd_en | pre_read) & (~empty))begin
-            if(~(rd_ptr_next_d1[j] ^ rd_ptr_next[j]) & rd_ptr_next[j-1] & ~(|rd_ptr_next[j-2:0]))
+            if(~(rd_ptr_next_d1[j] ^ rd_ptr_next[j]) & rd_ptr_next[j-1] & ~(|rd_ptr_next[j-2:0]))begin
                 rd_ptr_next[j] <= ~rd_ptr_next[j];
-            else 
+            end
+            else begin
                 rd_ptr_next[j] <= rd_ptr_next[j];
-        end
-        else begin
-            rd_ptr_next[j] <= rd_ptr_next[j];
+            end 
         end
     end
 end
