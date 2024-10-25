@@ -18,164 +18,306 @@
 # vmap work work 
 # Modifying F:\FPGA_Project\IP_lib\modelsim.ini
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 23:51:09 on Oct 09,2024
-# vlog -reportprogress 300 -work work ../sim/tb_spi.v 
-# -- Compiling module tb_spi
+# Start time: 21:05:26 on Oct 25,2024
+# vlog -reportprogress 300 -work work ../sim/tb_sync_fifo.v 
+# -- Compiling module tb_sync_fifo
 # 
 # Top level modules:
-# 	tb_spi
-# End time: 23:51:09 on Oct 09,2024, Elapsed time: 0:00:00
+# 	tb_sync_fifo
+# End time: 21:05:26 on Oct 25,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 23:51:10 on Oct 09,2024
-# vlog -reportprogress 300 -work work ../src/Interface/SPI.v 
-# -- Compiling module SPI
-# 
-# Top level modules:
-# 	SPI
-# End time: 23:51:10 on Oct 09,2024, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 0
-# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 23:51:10 on Oct 09,2024
-# vlog -reportprogress 300 -work work ../src/Interface/spi_slave.v 
-# -- Compiling module spi_slave
-# 
-# Top level modules:
-# 	spi_slave
-# End time: 23:51:10 on Oct 09,2024, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 0
-# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 23:51:10 on Oct 09,2024
-# vlog -reportprogress 300 -work work ../src/memory/PSRAM/hbram_ctrl.v 
-# -- Compiling module hbram_ctrl
-# 
-# Top level modules:
-# 	hbram_ctrl
-# End time: 23:51:10 on Oct 09,2024, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 0
-# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 23:51:10 on Oct 09,2024
+# Start time: 21:05:27 on Oct 25,2024
 # vlog -reportprogress 300 -work work ../src/memory/FIFO/DPRAM.v 
 # -- Compiling module DPRAM
 # 
 # Top level modules:
 # 	DPRAM
-# End time: 23:51:10 on Oct 09,2024, Elapsed time: 0:00:00
+# End time: 21:05:27 on Oct 25,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 23:51:10 on Oct 09,2024
+# Start time: 21:05:27 on Oct 25,2024
 # vlog -reportprogress 300 -sv ../src/memory/FIFO/ecc_encode.sv 
 # -- Compiling module ecc_encode
 # 
 # Top level modules:
 # 	ecc_encode
-# End time: 23:51:10 on Oct 09,2024, Elapsed time: 0:00:00
+# End time: 21:05:27 on Oct 25,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 23:51:11 on Oct 09,2024
+# Start time: 21:05:27 on Oct 25,2024
 # vlog -reportprogress 300 -sv ../src/memory/FIFO/ecc_decode.sv 
 # -- Compiling module ecc_decode
 # 
 # Top level modules:
 # 	ecc_decode
-# End time: 23:51:11 on Oct 09,2024, Elapsed time: 0:00:00
+# End time: 21:05:27 on Oct 25,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 23:51:11 on Oct 09,2024
+# Start time: 21:05:28 on Oct 25,2024
 # vlog -reportprogress 300 -work work ../src/memory/FIFO/sync_fifo.v 
 # -- Compiling module sync_fifo
 # 
 # Top level modules:
 # 	sync_fifo
-# End time: 23:51:11 on Oct 09,2024, Elapsed time: 0:00:00
+# End time: 21:05:28 on Oct 25,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
-# vsim -t ps "+notimingchecks" -gui -voptargs=""+acc"" work.tb_spi 
-# Start time: 23:51:11 on Oct 09,2024
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 21:05:28 on Oct 25,2024
+# vlog -reportprogress 300 -sv ../sim/xpm_fifo.sv 
+# -- Compiling module xpm_fifo_base
+# ** Warning: ../sim/xpm_fifo.sv(1440): (vlog-2643) Unterminated string literal continues onto next line.
+# ** Warning: ../sim/xpm_fifo.sv(1443): (vlog-2643) Unterminated string literal continues onto next line.
+# ** Warning: ../sim/xpm_fifo.sv(1455): (vlog-2643) Unterminated string literal continues onto next line.
+# -- Compiling module xpm_fifo_rst
+# -- Compiling module xpm_counter_updn
+# -- Compiling module xpm_fifo_reg_vec
+# -- Compiling module xpm_fifo_reg_bit
+# -- Compiling module xpm_reg_pipe_bit
+# -- Compiling module xpm_fifo_sync
+# -- Compiling module xpm_fifo_async
+# -- Compiling module xpm_fifo_axis
+# -- Compiling module xpm_fifo_axif
+# -- Compiling module xpm_fifo_axil
+# -- Compiling module xpm_fifo_axi_reg_slice
+# 
+# Top level modules:
+# 	xpm_fifo_sync
+# 	xpm_fifo_async
+# 	xpm_fifo_axis
+# 	xpm_fifo_axif
+# 	xpm_fifo_axil
+# End time: 21:05:28 on Oct 25,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 3
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 21:05:28 on Oct 25,2024
+# vlog -reportprogress 300 -sv ../sim/xpm_memory.sv 
+# -- Compiling module xpm_memory_base
+# -- Compiling module asym_bwe_bb
+# -- Compiling module xpm_memory_dpdistram
+# -- Compiling module xpm_memory_dprom
+# -- Compiling module xpm_memory_sdpram
+# -- Compiling module xpm_memory_spram
+# -- Compiling module xpm_memory_sprom
+# -- Compiling module xpm_memory_tdpram
+# 
+# Top level modules:
+# 	xpm_memory_dpdistram
+# 	xpm_memory_dprom
+# 	xpm_memory_sdpram
+# 	xpm_memory_spram
+# 	xpm_memory_sprom
+# 	xpm_memory_tdpram
+# End time: 21:05:28 on Oct 25,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vsim -t ps "+notimingchecks" -gui -voptargs=""+acc"" work.tb_sync_fifo 
+# Start time: 21:05:29 on Oct 25,2024
 # ** Note: (vsim-3813) Design is being optimized due to module recompilation...
-# ** Note: (vopt-143) Recognized 1 FSM in module "spi_slave(fast)".
-# Loading work.tb_spi(fast)
-# Loading work.SPI(fast)
-# Loading work.spi_slave(fast)
+# ** Warning: ../sim/tb_sync_fifo.v(222): (vopt-2685) [TFMPC] - Too few port connections for 'CP_fifo'.  Expected 23, found 22.
+# ** Warning: ../sim/tb_sync_fifo.v(222): (vopt-2718) [TFMPC] - Missing connection for port 'wr_ready'.
+# ** Warning: ../sim/tb_sync_fifo.v(191): (vopt-2697) MSB 15 of part-select into 'din' is out of bounds.
+# ** Warning: ../sim/tb_sync_fifo.v(191): (vopt-2697) LSB 8 of part-select into 'din' is out of bounds.
+# ** Warning: ../sim/tb_sync_fifo.v(191): (vopt-2697) MSB 15 of part-select into 'din' is out of bounds.
+# ** Warning: ../sim/tb_sync_fifo.v(191): (vopt-2697) LSB 8 of part-select into 'din' is out of bounds.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=6.
+# Loading work.tb_sync_fifo(fast)
 # Loading work.sync_fifo(fast)
 # Loading work.DPRAM(fast)
-# ** Warning: (vsim-3015) [PCDPC] - Port size (552) does not match connection size (8) for port 'rx_data'. The port definition is at: ../src/Interface/SPI.v(64).
-#    Time: 0 ps  Iteration: 0  Instance: /tb_spi/u_SPI File: ../sim/tb_spi.v Line: 281
-# Causality operation skipped due to absence of debug database file
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# End time: 23:59:15 on Oct 09,2024, Elapsed time: 0:08:04
-# Errors: 0, Warnings: 1
+# Loading sv_std.std
+# Loading work.xpm_fifo_sync(fast)
+# Loading work.xpm_fifo_base(fast)
+# Loading work.xpm_fifo_rst(fast)
+# Loading work.xpm_fifo_reg_bit(fast)
+# Loading work.xpm_counter_updn(fast)
+# Loading work.xpm_counter_updn(fast__1)
+# Loading work.xpm_counter_updn(fast__2)
+# Loading work.xpm_counter_updn(fast__3)
+# Loading work.xpm_counter_updn(fast__4)
+# Loading work.xpm_counter_updn(fast__5)
+# Loading work.xpm_counter_updn(fast__6)
+# Loading work.xpm_memory_base(fast)
+# Loading work.xpm_counter_updn(fast__7)
+#  23	   0	   0
+#  24	   0	   0
+#  25	   1	   1
+#  26	   2	   2
+#  27	   3	   3
+#  26252423	  1	 00000000	  0
+#  28	   4	   4
+#  29	   5	   5
+#  26252423	  1	 26252423	  1
+#  26252423	  1	 26252423	  1
+#  2a	   6	   6
+#  2b	   7	   7
+#  26252423	  1	 26252423	  1
+#  26252423	  2	 26252423	  2
+#  2c	   8	   8
+#  2d	   9	   9
+#  26252423	  2	 26252423	  2
+#  26252423	  2	 26252423	  2
+#  2e	  10	  10
+#  2f	  11	  11
+#  26252423	  2	 26252423	  2
+#  26252423	  3	 26252423	  3
+#  30	  12	  12
+#  31	  13	  13
+#  26252423	  3	 26252423	  3
+#  26252423	  3	 26252423	  3
+#  32	  14	  14
+#  33	  15	  15
+#  26252423	  3	 26252423	  3
+#  26252423	  4	 26252423	  4
+#  34	  16	  16
+#  35	  17	  17
+#  26252423	  4	 26252423	  4
+#  26252423	  4	 26252423	  4
+#  36	  18	  18
+#  37	  19	  19
+#  26252423	  4	 26252423	  4
+#  26252423	  5	 26252423	  5
+#  38	  20	  20
+#  39	  21	  21
+#  26252423	  5	 26252423	  5
+#  26252423	  5	 26252423	  5
+#  3a	  22	  22
+#  3b	  23	  23
+#  26252423	  5	 26252423	  5
+#  26252423	  6	 26252423	  6
+#  3c	  24	  24
+#  3d	  25	  25
+#  26252423	  6	 26252423	  6
+#  26252423	  6	 26252423	  6
+#  3e	  26	  26
+#  3f	  27	  27
+#  26252423	  6	 26252423	  6
+#  26252423	  7	 26252423	  7
+#  40	  28	  28
+#  41	  29	  29
+#  26252423	  7	 26252423	  7
+#  26252423	  7	 26252423	  7
+#  42	  30	  30
+#  43	  31	  31
+#  26252423	  7	 26252423	  7
+#  26252423	  8	 26252423	  8
+#  44	  32	  32
+#  45	  33	  33
+#  26252423	  8	 26252423	  8
+#  26252423	  8	 26252423	  8
+#  46	  34	  34
+#  47	  35	  35
+#  26252423	  8	 26252423	  8
+#  26252423	  9	 26252423	  9
+#  48	  36	  36
+#  49	  37	  37
+#  26252423	  9	 26252423	  9
+#  26252423	  9	 26252423	  9
+#  4a	  38	  38
+#  4b	  39	  39
+#  26252423	  9	 26252423	  9
+#  26252423	 10	 26252423	 10
+#  4c	  40	  40
+#  4d	  41	  41
+#  26252423	 10	 26252423	 10
+#  26252423	 10	 26252423	 10
+#  4e	  42	  42
+#  4f	  43	  43
+#  26252423	 10	 26252423	 10
+#  26252423	 11	 26252423	 11
+#  50	  44	  44
+#  51	  45	  45
+#  26252423	 11	 26252423	 11
+#  26252423	 11	 26252423	 11
+#  52	  46	  46
+#  53	  47	  47
+#  26252423	 11	 26252423	 11
+#  26252423	 12	 26252423	 12
+#  54	  48	  48
+#  55	  49	  49
+#  26252423	 12	 26252423	 12
+#  26252423	 12	 26252423	 12
+#  56	  50	  50
+#  57	  51	  51
+#  26252423	 12	 26252423	 12
+#  26252423	 13	 26252423	 13
+#  58	  52	  52
+#  59	  53	  53
+#  26252423	 13	 26252423	 13
+#  26252423	 13	 26252423	 13
+#  5a	  54	  54
+#  5b	  55	  55
+#  26252423	 13	 26252423	 13
+#  26252423	 14	 26252423	 14
+#  5c	  56	  56
+#  5d	  57	  57
+#  26252423	 14	 26252423	 14
+#  26252423	 14	 26252423	 14
+#  5e	  58	  58
+#  5f	  59	  59
+#  26252423	 14	 26252423	 14
+#  26252423	 15	 26252423	 15
+#  60	  60	  60
+#  61	  61	  61
+#  26252423	 15	 26252423	 15
+#  26252423	 15	 26252423	 15
+#  62	  62	  62
+#  63	  63	  63
+#  26252423	 15	 26252423	 15
+#  26252423	 16	 26252423	 16
+#  64	  64	  64
+#  65	  65	  65
+#  26252423	 16	 26252423	 16
+#  26252423	 16	 26252423	 16
+#  66	  66	  66
+#  67	  67	  67
+#  26252423	 16	 26252423	 16
+#  26252423	 17	 26252423	 17
+#  68	  68	  68
+#  69	  69	  69
+#  26252423	 17	 26252423	 17
+#  26252423	 17	 26252423	 17
+#  6a	  70	  70
+#  26252423	 17	 26252423	 17
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  26252423	 18	 26252423	 18
+#  2a292827	 17	 2a292827	 18
+#  2e2d2c2b	 16	 2e2d2c2b	 17
+#  3231302f	 15	 3231302f	 16
+#  36353433	 14	 36353433	 15
+#  3a393837	 13	 3a393837	 14
+#  3e3d3c3b	 12	 3e3d3c3b	 13
+#  4241403f	 11	 4241403f	 12
+#  46454443	 10	 46454443	 11
+#  4a494847	  9	 4a494847	 10
+#  4e4d4c4b	  8	 4e4d4c4b	  9
+#  5251504f	  7	 5251504f	  8
+#  56555453	  6	 56555453	  7
+#  5a595857	  5	 5a595857	  6
+#  5e5d5c5b	  4	 5e5d5c5b	  5
+#  6261605f	  3	 6261605f	  4
+#  66656463	  2	 66656463	  3
+#  6a696867	  1	 6a696867	  2
+# End time: 21:07:38 on Oct 25,2024, Elapsed time: 0:02:09
+# Errors: 0, Warnings: 6

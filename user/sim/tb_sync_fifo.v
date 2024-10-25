@@ -2,22 +2,22 @@
 
 module tb_sync_fifo();
 
-parameter    INPUT_WIDTH  = 16;
-parameter    OUTPUT_WIDTH = 16;
+parameter    INPUT_WIDTH  = 8;
+parameter    OUTPUT_WIDTH = 32;
 /*
 	The depth parameter of writing mem
 	if INPUT_WIDTH < OUTPUT_WIDTH, WR_DEPTH = (OUTPUT_WIDTH/INPUT_WIDTH) * RD_DEPTH
 */
-parameter    WR_DEPTH     = 16;
+parameter    WR_DEPTH     = 72;
 /*
 	The depth parameter of reading mem
 	if INPUT_WIDTH > OUTPUT_WIDTH, RD_DEPTH = (INPUT_WIDTH/OUTPUT_WIDTH) * WR_DEPTH
 */
-parameter    RD_DEPTH     = 16;
+parameter    RD_DEPTH     = 18;
 //The parameter of reading method
 parameter    MODE         = "FWFT";
 //Is data stored from high bits or from low bits
-parameter    DIRECTION    = "MSB";
+parameter    DIRECTION    = "LSB";
 
 parameter MAIN_FRE   = 100; //unit MHz
 reg                   sys_clk = 0;
@@ -62,8 +62,15 @@ wire 						xpm_valid;
 wire [OUTPUT_WIDTH-1:0] 	xpm_dout;
 wire						xpm_full;
 wire						xpm_empty;
-wire [$clog2(WR_DEPTH) : 0] xpm_wr_data_count;
-wire [$clog2(RD_DEPTH) : 0] xpm_rd_data_count;
+wire [$clog2(WR_DEPTH)-1:0] xpm_wr_data_count;
+wire [$clog2(RD_DEPTH)-1:0] xpm_rd_data_count;
+
+wire						xpm_almost_full;
+wire						xpm_almost_empty;
+wire						xpm_prog_full;
+wire						xpm_prog_empty;
+wire						xpm_overflow;
+wire						xpm_underflow;
 
 task reset_normal;
 begin
@@ -172,7 +179,7 @@ initial begin
 end
 
 initial begin
-	simultaneous();
+	separate();
 end
 
 always @(posedge sys_clk) begin
@@ -210,7 +217,7 @@ sync_fifo #(
 	.DIRECTION    	   ( DIRECTION		),
 	.ECC_MODE          ( "no_ecc"	    ),
 	.PROG_EMPTY_THRESH (  10            ),
-	.PROG_FULL_THRESH  (  10			),
+	.PROG_FULL_THRESH  (  15			),
 	.USE_ADV_FEATURES  ( 16'h1F1F		))
 CP_fifo(
 	.clock       	( sys_clk        	 ),
@@ -241,33 +248,33 @@ xpm_fifo_sync #(
     .DOUT_RESET_VALUE("0"),    // String
     .ECC_MODE("no_ecc"),       // String
     .FIFO_MEMORY_TYPE("block"), // String
-    .FIFO_READ_LATENCY(0),     // DECIMAL
-    .FIFO_WRITE_DEPTH(WR_DEPTH),   // DECIMAL
+    .FIFO_READ_LATENCY(1),     // DECIMAL
+    .FIFO_WRITE_DEPTH(64),   // DECIMAL
     .FULL_RESET_VALUE(0),      // DECIMAL
     .PROG_EMPTY_THRESH(10),    // DECIMAL
-    .PROG_FULL_THRESH(10),     // DECIMAL
-    .RD_DATA_COUNT_WIDTH($clog2(RD_DEPTH)+1),   // DECIMAL
+    .PROG_FULL_THRESH(15),     // DECIMAL
+    .RD_DATA_COUNT_WIDTH($clog2(16)+1),   // DECIMAL
     .READ_DATA_WIDTH(OUTPUT_WIDTH),      // DECIMAL
     .READ_MODE("fwft"),         // String
-    .USE_ADV_FEATURES("1404"), // only enable rd_data_count and wr_data_count
+    .USE_ADV_FEATURES("1F1F"), // only enable rd_data_count and wr_data_count
     .WAKEUP_TIME(0),           // DECIMAL
     .WRITE_DATA_WIDTH(INPUT_WIDTH),     // DECIMAL
-    .WR_DATA_COUNT_WIDTH($clog2(WR_DEPTH)+1)    // DECIMAL
+    .WR_DATA_COUNT_WIDTH($clog2(64)+1)    // DECIMAL
 ) fifo_1clk_for_running_sum_dual_ch_i (
-    .almost_empty(),
-    .almost_full(),
+    .almost_empty(xpm_almost_empty),
+    .almost_full(xpm_almost_full),
     .data_valid(xpm_valid),
     .dbiterr(),
     .dout(xpm_dout),
     .empty(xpm_empty),
     .full(xpm_full),
-    .overflow(),
-    .prog_empty(),
-    .prog_full(),
+    .overflow(xpm_overflow),
+    .prog_empty(xpm_prog_empty),
+    .prog_full(xpm_prog_full),
     .rd_data_count(xpm_rd_data_count),
     .rd_rst_busy(),
     .sbiterr(),
-    .underflow(),
+    .underflow(xpm_underflow),
     .wr_ack(),
     .wr_data_count(xpm_wr_data_count),
     .wr_rst_busy(),
