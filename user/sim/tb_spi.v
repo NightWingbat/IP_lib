@@ -416,7 +416,7 @@ u_sync_fifo(
 initial begin            
     $dumpfile("wave.vcd");        
     $dumpvars(0, tb_spi);    
-    #5000000 $finish;
+    #6000000 $finish;
 end
 
 endmodule  //TOP

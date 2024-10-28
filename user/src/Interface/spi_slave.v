@@ -28,14 +28,12 @@
 */
 
 // wavedom
-/*
+/* @wavedrom 
 {signal: [
-  {name: 'clka/b', wave: '101010101'},
-  {name: 'ena/b', wave: '01...0...'},
-  {name: 'wea/b', wave: '01...0...'},
-  {name: 'addra/b', wave: 'x3...3.x.', data: ['addr0','addr2']},
-  {name: 'dina/b', wave: 'x4.4.x...', data: ['data0','data1']},
-  {name: 'douta/b', wave: 'x..5.5.x.', data: ['data0','data2']},
+  {name: 'sys_clk', wave: '01010101010101010101010101'},
+  {name: 'SCLK', wave: '0...1...0...1...0...1...0.'},
+  {name: 'spi_sck', wave: '0.....1...0...1...0...1...'},
+  {name: 'miso', wave: '0.........1.......0.......'},
 ]}
 */
 
@@ -109,7 +107,6 @@ reg                              sclk_d1;
 reg                              spi_sclk;
 reg                              spi_sclk_d1;
 
-
 reg                              ce_d1;
 reg                              spi_ce;
 
@@ -132,36 +129,36 @@ reg [$clog2(DATA_WIDTH)     : 0] data_cnt_d1;
 
 always @(posedge clock or posedge reset) begin
   if(reset == 1'b1)begin
-      sclk_d1     <= 1'b0;
+      //sclk_d1     <= 1'b0;
       spi_sclk    <= 1'b0;
       spi_sclk_d1 <= 1'b0;
   end
   else begin
-      sclk_d1     <= sclk;
-      spi_sclk    <= sclk_d1;
+      //sclk_d1     <= sclk;
+      spi_sclk    <= sclk;
       spi_sclk_d1 <= spi_sclk;
   end
 end
 
 always @(posedge clock or posedge reset) begin
   if(reset == 1'b1)begin
-      ce_d1     <= 1'b0;
+      //ce_d1     <= 1'b0;
       spi_ce    <= 1'b0;
   end
   else begin
-      ce_d1     <= ce;
-      spi_ce    <= ce_d1;
+      //ce_d1     <= ce;
+      spi_ce    <= ce;
   end
 end
 
 always @(posedge clock or posedge reset) begin
   if(reset == 1'b1)begin
-      mosi_d1  <= 1'b0;
+      //mosi_d1  <= 1'b0;
       spi_mosi <= 1'b0;
   end
   else begin
-      mosi_d1  <= mosi;
-      spi_mosi <= mosi_d1;
+      //mosi_d1  <= mosi;
+      spi_mosi <= mosi;
   end
 end
 

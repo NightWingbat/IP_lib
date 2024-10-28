@@ -20,10 +20,10 @@ n@_opt
 Z3 OL;O;2020.4;71
 R0
 T_opt2
-!s110 1729861531
-VAzLT2N4WgV^6_U2:jITK53
-04 12 4 work tb_sync_fifo fast 0
-=1-d4e98a6083c1-671b979a-ff-1254
+!s110 1730000056
+V<F9Vz?o=Q30cEcT762F:>3
+04 6 4 work tb_spi fast 0
+=1-d4e98a6083c1-671db4b7-1e3-3f3c
 R1
 R2
 n@_opt2
@@ -77,7 +77,7 @@ Z17 !s108 1724854121.000000
 Z18 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
 R2
 vDPRAM
-Z19 !s110 1729861527
+Z19 !s110 1730000053
 !i10b 1
 !s100 lQ4JTM0@WSYRX?7KoQ1K`2
 R6
@@ -86,14 +86,14 @@ R0
 w1719922286
 8../src/memory/FIFO/DPRAM.v
 F../src/memory/FIFO/DPRAM.v
-!i122 1902
+!i122 1932
 L0 41 62
 R10
 R11
 r1
 !s85 0
 31
-Z20 !s108 1729861527.000000
+Z20 !s108 1730000053.000000
 !s107 ../src/memory/FIFO/DPRAM.v|
 !s90 -reportprogress|300|-work|work|../src/memory/FIFO/DPRAM.v|
 !i113 0
@@ -112,7 +112,7 @@ R0
 R7
 8../src/memory/FIFO/ecc_decode.sv
 F../src/memory/FIFO/ecc_decode.sv
-!i122 1904
+!i122 1934
 L0 40 92
 R10
 R11
@@ -137,7 +137,7 @@ R0
 R7
 8../src/memory/FIFO/ecc_encode.sv
 F../src/memory/FIFO/ecc_encode.sv
-!i122 1903
+!i122 1933
 L0 40 51
 R10
 R11
@@ -151,7 +151,7 @@ R20
 R15
 R2
 vhbram_ctrl
-Z21 !s110 1728489070
+!s110 1728489070
 !i10b 1
 !s100 o:m[aYCk2HM_eBjjCI:bG2
 R6
@@ -167,30 +167,30 @@ R11
 r1
 !s85 0
 31
-Z22 !s108 1728489070.000000
+!s108 1728489070.000000
 !s107 ../src/memory/PSRAM/hbram_ctrl.v|
 !s90 -reportprogress|300|-work|work|../src/memory/PSRAM/hbram_ctrl.v|
 !i113 0
 R18
 R2
 vSPI
-R21
+Z21 !s110 1730000049
 !i10b 1
 !s100 ^X2HWB?[S0cSA7M<e@Mdj0
 R6
 INS9H3URPJ@F9<WTMC]KKk0
 R0
-w1728444396
+R7
 8../src/Interface/SPI.v
 F../src/Interface/SPI.v
-!i122 1534
+!i122 1930
 L0 41 364
 R10
 R11
 r1
 !s85 0
 31
-R22
+Z22 !s108 1730000049.000000
 !s107 ../src/Interface/SPI.v|
 !s90 -reportprogress|300|-work|work|../src/Interface/SPI.v|
 !i113 0
@@ -223,15 +223,15 @@ R2
 vspi_slave
 R21
 !i10b 1
-!s100 1>kS<bQHJ>XQcJAQ_]REZ1
+!s100 5D2HkNU`ibZ[[>Zca1fTn0
 R6
-I;@HYDK7fGjIZ<jhaH:C@;0
+IE]cLQ2fW[:P;TjMzc_iJi1
 R0
-w1728489056
+R7
 8../src/Interface/spi_slave.v
 F../src/Interface/spi_slave.v
-!i122 1535
-L0 42 534
+!i122 1931
+L0 42 576
 R10
 R11
 r1
@@ -244,23 +244,23 @@ R22
 R18
 R2
 vsync_fifo
-R5
+!s110 1730000054
 !i10b 1
 !s100 @gAXE5hzmJ:6z7;5C>]Di1
 R6
 I7C3K95=o8U^@aRY4>281a1
 R0
-w1729856638
+w1729866588
 8../src/memory/FIFO/sync_fifo.v
 F../src/memory/FIFO/sync_fifo.v
-!i122 1905
+!i122 1935
 L0 50 774
 R10
 R11
 r1
 !s85 0
 31
-R12
+!s108 1730000054.000000
 !s107 ../src/memory/FIFO/sync_fifo.v|
 !s90 -reportprogress|300|-work|work|../src/memory/FIFO/sync_fifo.v|
 !i113 0
@@ -313,23 +313,23 @@ R17
 R18
 R2
 vtb_spi
-!s110 1728489069
+R21
 !i10b 1
-!s100 _UCGGY8Fi67jJ9igm18XE3
+!s100 c6e>zIJQc?`3CS9c[CXGR1
 R6
-I`Dfn1SX2Z]<3N?d@Ra4`Y3
+I?AHMIEDkQ_?W`42RP2ngQ3
 R0
-w1728482591
+w1730000030
 8../sim/tb_spi.v
 F../sim/tb_spi.v
-!i122 1533
+!i122 1929
 L0 3 420
 R10
 R11
 r1
 !s85 0
 31
-!s108 1728489069.000000
+R22
 !s107 ../sim/tb_spi.v|
 !s90 -reportprogress|300|-work|work|../sim/tb_spi.v|
 !i113 0

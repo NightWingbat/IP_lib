@@ -25,3 +25,7 @@
 1. Complete the joint debugging of SPI_Slave and FIFO to achieve data read and write of CH347, but the clock rate is only 15MHz
    
 2. Change the synchronous FIFO to a binary counter, which can achieve non-2 power depth and fix the issue of additional signals
+
+## 0.0.2
+
+1. Improve SPI performance, currently SPI clock can reach 30M at 150M system clock
