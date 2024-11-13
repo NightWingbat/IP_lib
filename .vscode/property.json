@@ -7,5 +7,15 @@
 		"core": "none"
 	},
 	"enableShowLog": false,
-	"device": "xc7a35tcsg324-1"
+	"device": "xczu3eg-sfvc784-2-i",
+	"library": {
+		"state": "remote",
+		"hardware": {
+			"common": [
+				"Factory/Xilinx/src/selectio/lvds_clk.v",
+				"Factory/Xilinx/src/selectio/lvds_in.v"
+			],
+			"custom": []
+		}
+	}
 }

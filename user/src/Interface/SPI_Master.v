@@ -38,7 +38,7 @@
   {name: 'douta/b', wave: 'x..5.5.x.', data: ['data0','data2']},
 ]}
 */
-module SPI #(
+module SPI_Master #(
     //The parameter for clock idle state level
     parameter    CPOL       = 0,
     //The parameter for clock phase

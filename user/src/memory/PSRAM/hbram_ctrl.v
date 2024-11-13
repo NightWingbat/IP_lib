@@ -47,7 +47,9 @@ module hbram_ctrl #(
     //SPI write command
     parameter    CTRL_WRITE = 1'b1, // @suppress "Parameter 'CTRL_WRITE' is never used locally"
     //SPI read  command
-    parameter    CTRL_READ  = 1'b0 // @suppress "Parameter 'CTRL_READ' is never used locally"
+    parameter    CTRL_READ  = 1'b0, // @suppress "Parameter 'CTRL_READ' is never used locally"
+    //Burst read or write length
+    parameter    LEN_WIDTH  = 32
 ) (
     //system clock input
     input                           clock, // @suppress "Port 'clock' is never used locally"
@@ -61,6 +63,8 @@ module hbram_ctrl #(
     input      [CTRL_WIDTH - 1 : 0] ctrl, // @suppress "Port 'ctrl' is never used locally"
     //register address signal
     input      [ADDR_WIDTH - 1 : 0] address, // @suppress "Port 'address' is never used locally"
+    //Burst write or read number
+    input      [LEN_WIDTH  - 1 : 0] burst_len,
     //hyperram operation status  1: operating  0: idle
     input                           ram_idle, // @suppress "Port 'ram_idle' is never used locally"
     //hyperram operation control signal
@@ -84,8 +88,38 @@ reg        ram_idle_d1;
 wire       ram_idle_pos;
 wire       ram_idle_neg;
 
+reg [31:0] data_cnt;
+reg        read_valid;
+
 assign ram_idle_pos = (~ram_idle_d1) & ram_idle;
 assign ram_idle_neg = (~ram_idle)    & ram_idle_d1;
+
+always @(posedge clock or posedge reset) begin
+    if(reset == 1'b1)begin
+        data_cnt <= 32'd0;
+    end
+    else if(spi_done && ctrl == CTRL_WRITE)begin
+        data_cnt <= data_cnt + 32'd16;
+    end
+    else if(state_now == READ)begin
+        data_cnt <= 32'd0;
+    end
+    else begin
+        data_cnt <= data_cnt;
+    end
+end
+
+always @(posedge clock or posedge reset) begin
+    if(reset == 1'b1)begin
+        read_valid <= 1'b0;
+    end
+    else if(state_now == WRITE)begin
+        read_valid <= 1'b1;
+    end
+    else if(state_now == READ)begin
+        read_valid <= 1'b0;
+    end
+end
 
 always @(posedge clock or posedge reset) begin
     if(reset == 1'b1)begin
@@ -122,12 +156,11 @@ always @(*) begin
             end
 
             DONE:begin
-                if(spi_done)begin
-                    case (ctrl)
-                        CTRL_WRITE : state_next <= WRITE;
-                        CTRL_READ  : state_next <= READ;
-                        default    : state_next <= DONE;
-                    endcase
+                if(read_valid)begin
+                    state_next <= READ;
+                end
+                else if(data_cnt >= burst_len)begin
+                    state_next <= WRITE;
                 end
                 else begin
                     state_next <= DONE;
@@ -135,21 +168,23 @@ always @(*) begin
             end
 
             WRITE:begin
-                if(ram_idle_neg)begin
-                    state_next <= WAIT;
-                end
-                else begin
-                    state_next <= WRITE;
-                end
+                state_next <= WAIT;
+                // if(ram_idle_neg)begin
+                //     state_next <= WAIT;
+                // end
+                // else begin
+                //     state_next <= WRITE;
+                // end
             end
 
             READ:begin
-                if(ram_idle_neg)begin
-                    state_next <= WAIT;
-                end
-                else begin
-                    state_next <= READ;
-                end
+                state_next <= WAIT;
+                // if(ram_idle_neg)begin
+                //     state_next <= WAIT;
+                // end
+                // else begin
+                //     state_next <= READ;
+                // end
             end
 
             WAIT:begin
@@ -175,10 +210,11 @@ always @(posedge clock or posedge reset) begin
         ram_en <= 1'b0;
     end
     else if(state_now == WRITE || state_now == READ)begin
-        if(ram_idle)
-            ram_en <= 1'b1;
-        else 
-            ram_en <= 1'b0;
+        ram_en <= 1'b1;
+        // if(ram_idle)
+        //     ram_en <= 1'b1;
+        // else 
+        //     ram_en <= 1'b0;
     end
     else begin
         ram_en <= 1'b0;
@@ -191,7 +227,7 @@ always @(posedge clock or posedge reset) begin
         ram_addr       <= 32'h8000_0000;
     end
     else if(state_now == WRITE || state_now == READ)begin
-        ram_addr[31]   <= 1'b1;
+        ram_addr[31]   <= 1'b0;
         ram_addr[30:0] <= address;
     end
     else begin

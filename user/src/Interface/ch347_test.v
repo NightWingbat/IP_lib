@@ -18,9 +18,9 @@ module ch347_test #(
     //SPI read  command
     parameter    CTRL_READ  = 8'h3b // @suppress "Parameter 'CTRL_READ' is never used locally"
 ) (
-    input   clk,
+    input   clock,
 
-    input   reset,
+    input   locked,
 
     input   sclk,
 
@@ -32,8 +32,8 @@ module ch347_test #(
 );
 
 // outports wire
-wire					clock;
-wire					locked;
+// wire					clock;
+// wire					locked;
 
 wire [CTRL_WIDTH-1:0] 	ctrl;
 wire [ADDR_WIDTH-1:0] 	address;
@@ -53,15 +53,15 @@ reg 					hbc_cal_pass;
 wire                    full;
 wire                    empty;
 
-clk_wiz_0 instance_name
-   (
-    // Clock out ports
-    .clk_out1(clock),     // output clk_out1
-    // Status and control signals
-    .reset(reset), // input reset
-    .locked(locked),       // output locked
-   // Clock in ports
-    .clk_in1(clk));      // input clk_in1
+// clk_wiz_0 instance_name
+//    (
+//     // Clock out ports
+//     .clk_out1(clock),     // output clk_out1
+//     // Status and control signals
+//     .reset(reset), // input reset
+//     .locked(locked),       // output locked
+//    // Clock in ports
+//     .clk_in1(clk));      // input clk_in1
 
 always @(posedge clock or negedge locked) begin
 	if(locked == 1'b0)begin

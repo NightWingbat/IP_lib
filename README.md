@@ -29,3 +29,7 @@
 ## 0.0.2
 
 1. Improve SPI performance, currently SPI clock can reach 30M at 150M system clock
+
+## 0.0.3
+
+1. Complete the joint debugging of ELITESTEK hyper_ram IP and spi_Slave, and be able to achieve CH347 data loop through hyper_ram
