@@ -59,9 +59,9 @@ module async_fifo #(
     //Specify the value of programmable full threshold
     parameter    PROG_FULL_THRESH  = 10,
     //Enable the corresponding signal
-    parameter    USE_ADV_FEATURES  = "0707"
+    parameter    USE_ADV_FEATURES  = 16'h1F1F
 ) (
-    //reser
+    //system reset active low
     input                              reset,
 
     //wr_port
@@ -110,8 +110,18 @@ module async_fifo #(
     //the read request from the previous clock cycle was rejected because the fifo is now empty
     output  reg                        underflow,
     //the write request was successful in the previous clock cycle
-    output                             wr_ack
+    output                             wr_ack,
+    //the ECC decoder detected a single bit error and corrected it accordingly
+    output                             sbiterr,
+    //the ECC decoder detected a double bit error, and the data in the FIFO is now corrupted
+    output                             dbiterr
 );
+
+//when ECC mode is enable,ECC Encode DATA_WIDTH
+localparam DW = INPUT_WIDTH;
+
+//when ECC mode is enable,ECC Encode PARITY_WIDTH
+localparam PW = $clog2(1+DW+$clog2(1+DW));
 
 //the number of ram needed to be operated
 localparam RAM_NUM      = (INPUT_WIDTH >= OUTPUT_WIDTH) ? (INPUT_WIDTH/OUTPUT_WIDTH) : (OUTPUT_WIDTH/INPUT_WIDTH);
@@ -129,33 +139,22 @@ localparam RAM_WR_WIDTH = (INPUT_WIDTH >= OUTPUT_WIDTH) ? INPUT_WIDTH : OUTPUT_W
 localparam RAM_RD_WIDTH = RAM_WR_WIDTH;
 
 //reset
-reg                              rst_d1;         //buffer of acync reset
-reg                              rst_d2;         //buffer of acync reset
-
 wire                             rd_rst;         //read clock domain reset signal
 
-reg                              rd_rst_d1 = 1'b0;//buffer of acync read reset
-reg                              rd_rst_d2 = 1'b0;//buffer of acync read reset
+reg                              rd_rst_d1 = 1'b1;//buffer of acync read reset
+reg                              rd_rst_d2 = 1'b1;//buffer of acync read reset
 
 wire                             wr_rst;        //write clock domain reset signal
 
 //gray code counter
-reg  [$clog2(WR_DEPTH) : 0]      wr_ptr;         //mark the location of fifo writing,use gray code counter
-reg  [$clog2(WR_DEPTH) - 1 : 0]  wr_ptr_d1;      //buffer of wr_ptr,when counting gary code,need it 
+reg  [$clog2(WR_DEPTH) : 0]      wr_ptr;         //mark the location of fifo writing
 
-reg  [$clog2(RD_DEPTH) : 0]      rd_ptr;         //mark the location of fifo reading,use gray code counter
-reg  [$clog2(RD_DEPTH) - 1 : 0]  rd_ptr_d1;      //buffer of rd_ptr,when counting gary code,need it
+reg  [$clog2(RD_DEPTH) : 0]      rd_ptr;         //mark the location of fifo reading
 
 reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_next;    //mark the next position of fifo reading
-reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_next_d1; //buffer of rd_ptr_next,when counting gary code,need it
 
 reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_pre;     //mark the position of data in fifo before pre-reading
 reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_fwft;    //when in fwft mode,the change of ram_address need to use rd_ptr_fwft
-
-//read mode 
-reg  [$clog2(RD_DEPTH) : 0]      rd_ptr_fwft_d1; //buffer of rd_ptr_fwft
-
-wire [RAM_RD_WIDTH - 1 : 0]      ram_rd_data;
 
 //DPRAM_port
 wire [RAM_NUM - 1 : 0]           ram_wr_en;     //DPRAM write enable signal
@@ -164,24 +163,24 @@ wire [RAM_NUM - 1 : 0]           ram_rd_en;     //DPRAM read  enable signal
 wire [$clog2(RAM_DEPTH)     : 0] ram_wr_addr;   //DPRAM write address
 wire [$clog2(RAM_DEPTH)     : 0] ram_rd_addr;   //DPRAM read  address
 
+wire [RAM_WR_WIDTH      - 1 : 0] ram_wr_data;   //DPRAM write data
+wire [RAM_RD_WIDTH      - 1 : 0] ram_rd_data;   //DPRAM read data
+
+//data count
+wire [$clog2(RD_DEPTH) : 0]      rd_addr;    //mark the location of fifo reading
+
 //full and empty judge
-// wire [$clog2(RAM_DEPTH)     : 0] ram_wr_addr_g;     //the gray code of ram_wr_addr
-// wire [$clog2(RAM_DEPTH)     : 0] ram_rd_addr_g;     //the gray code of ram_rd_addr
+wire [$clog2(RAM_DEPTH)     : 0] ram_wr_addr_g;     //the gray code of ram_wr_addr
+wire [$clog2(RAM_DEPTH)     : 0] ram_rd_addr_g;     //the gray code of ram_rd_addr
 
 reg  [$clog2(RAM_DEPTH)     : 0] ram_wr_addr_g_d1;  //take one beat ram_wr_addr_g
-reg  [$clog2(RAM_DEPTH)     : 0] ram_wr_addr_g_d2;  //take one beat ram_rd_addr_g
+reg  [$clog2(RAM_DEPTH)     : 0] ram_wr_rd_addr_g;  //take one beat ram_rd_addr_g
 
 reg  [$clog2(RAM_DEPTH)     : 0] ram_rd_addr_g_d1; //take two beat ram_wr_addr_g
-reg  [$clog2(RAM_DEPTH)     : 0] ram_rd_addr_g_d2; //take two beat ram_rd_addr_g
+reg  [$clog2(RAM_DEPTH)     : 0] ram_rd_wr_addr_g; //take two beat ram_rd_addr_g
 
-reg  [$clog2(WR_DEPTH)      : 0] wr_ptr_b;    //the binary of the gray code of wr_ptr in write clock domain
-reg  [$clog2(RD_DEPTH)      : 0] rd_ptr_b;    //the binary of the gray code of rd_ptr in read  clock domain
-
-wire [$clog2(RAM_DEPTH)     : 0] ram_wr_addr_b;    //the binary of the gray code of ram_wr_addr in write clock domain
-wire [$clog2(RAM_DEPTH)     : 0] ram_rd_addr_b;    //the binary of the gray code of ram_rd_addr in read  clock domain
-
-reg  [$clog2(RAM_DEPTH)     : 0] ram_wr_addr_b_d2; //the binary of the gray code of ram_wr_addr in read  clock domain
-reg  [$clog2(RAM_DEPTH)     : 0] ram_rd_addr_b_d2; //the binary of the gray code of ram_rd_addr in write clock domain
+reg  [$clog2(RAM_DEPTH)     : 0] ram_wr_rd_addr_b;    //the binary of the gray code of ram_wr_addr in write clock domain
+reg  [$clog2(RAM_DEPTH)     : 0] ram_rd_wr_addr_b;    //the binary of the gray code of ram_rd_addr in read  clock domain
 
 reg                              empty_d1;         //buffer of empty
 reg                              pre_valid;        //record the period before formal reading after pre reading
@@ -197,18 +196,7 @@ assign wr_data_space = WR_DEPTH - wr_data_count;
 assign rd_data_space = RD_DEPTH - rd_data_count;
 
 //Asynchronous reset, synchronous release,first release read reset
-assign rd_rst = rst_d2;
-
-always @(posedge rd_clock or negedge reset) begin
-    if(reset)begin
-        rst_d1 <= 1'b0;
-        rst_d2 <= 1'b0;
-    end
-    else begin
-        rst_d1 <= 1'b1;
-        rst_d2 <= rst_d1;
-    end
-end
+assign rd_rst = reset;
 
 //Asynchronous reset, synchronous release,release write reset after read reset
 assign wr_rst = rd_rst_d2;
@@ -218,145 +206,39 @@ always @(posedge wr_clock) begin
     rd_rst_d2 <= rd_rst_d1;
 end
 
-//mark the position of writing,use gray code counter
-always @(posedge wr_clock or negedge wr_rst) begin
-    if(wr_rst == 1'b0)begin
-        wr_ptr_d1 <= 0;
+//mark the position of writing
+always @(posedge wr_clock or posedge wr_rst) begin
+    if(wr_rst == 1'b1)begin
+        wr_ptr <= 0;
     end
     else if(wr_en & (~full))begin
-        wr_ptr_d1 <= wr_ptr[$clog2(WR_DEPTH) - 2 : 0];
-    end
-    else begin
-        wr_ptr_d1 <= wr_ptr_d1;
+        wr_ptr <= wr_ptr + 1'b1;
     end
 end
 
-always @(posedge wr_clock or negedge wr_rst) begin
-    if(wr_rst == 1'b0)begin
-        wr_ptr[0]                  <= 0;
-        wr_ptr[1]                  <= 0; 
-        wr_ptr[$clog2(WR_DEPTH)-1] <= 0; 
-        wr_ptr[$clog2(WR_DEPTH)]   <= 0;
-    end
-    else if(wr_en & (~full))begin
-        wr_ptr[0]                  <= (~(wr_ptr_d1[0] ^ wr_ptr[0]))? ~wr_ptr[0] : wr_ptr[0];
-        wr_ptr[1]                  <= (~(wr_ptr_d1[1] ^ wr_ptr[1]) & wr_ptr[0]) ? ~wr_ptr[1] : wr_ptr[1];
-        wr_ptr[$clog2(WR_DEPTH)-1] <= (wr_ptr[$clog2(WR_DEPTH)-1] ^ wr_ptr[$clog2(WR_DEPTH)-2]) & ~(|wr_ptr[$clog2(WR_DEPTH)-3:0])? ~wr_ptr[$clog2(WR_DEPTH)-1] : wr_ptr[$clog2(WR_DEPTH)-1];
-        wr_ptr[$clog2(WR_DEPTH)]   <= (wr_ptr[$clog2(WR_DEPTH)-1] & ~(|wr_ptr[$clog2(WR_DEPTH)-2:0]))? ~wr_ptr[$clog2(WR_DEPTH)] : wr_ptr[$clog2(WR_DEPTH)];
-    end
-end
-
-genvar m;
-
-generate for(m=2;m<$clog2(WR_DEPTH)-1;m=m+1)begin : WR_GRAY_COUNTER
-
-    //wr_ptr
-    always @(posedge wr_clock or negedge wr_rst)begin
-        if(wr_rst == 1'b0)begin
-            wr_ptr[m] <= 1'b0;
-        end
-        else if(wr_en & (~full))begin
-            if(~(wr_ptr_d1[m]^wr_ptr[m]) & wr_ptr[m-1] & ~(|wr_ptr[m-2:0]))begin
-                wr_ptr[m] <= ~wr_ptr[m];
-            end
-            else begin
-                wr_ptr[m] <= wr_ptr[m];
-            end
-        end
-    end
-
-end
-endgenerate
-
-//mark the position of reading,use gray code counter
-always @(posedge rd_clock or negedge rd_rst) begin
-    if(rd_rst == 1'b0)begin
-        rd_ptr_d1 <= 0;
+//mark the position of reading
+always @(posedge rd_clock or posedge rd_rst) begin
+    if(rd_rst == 1'b1)begin
+        rd_ptr <= 0;
     end
     else if(rd_en & (~empty))begin
-        rd_ptr_d1 <= rd_ptr[$clog2(RD_DEPTH) - 2 : 0];
+        rd_ptr <= rd_ptr + 1'b1;
     end
 end
 
-always @(posedge rd_clock or negedge rd_rst) begin
-    if(rd_rst == 1'b0)begin
-        rd_ptr[0]                  <= 0;
-        rd_ptr[1]                  <= 0;
-        rd_ptr[$clog2(RD_DEPTH)-1] <= 0;
-        rd_ptr[$clog2(RD_DEPTH)]   <= 0;
-    end
-    else if(rd_en & (~empty))begin
-        rd_ptr[0]                  <= (~(rd_ptr_d1[0] ^ rd_ptr[0]))? ~rd_ptr[0] : rd_ptr[0];
-        rd_ptr[1]                  <= (~(rd_ptr_d1[1] ^ rd_ptr[1]) & rd_ptr[0]) ? ~rd_ptr[1] : rd_ptr[1];
-        rd_ptr[$clog2(RD_DEPTH)-1] <= ((rd_ptr[$clog2(RD_DEPTH)-1] ^ rd_ptr[$clog2(RD_DEPTH)-2]) & (~(|rd_ptr[$clog2(RD_DEPTH)-3:0]))) ? ~rd_ptr[$clog2(RD_DEPTH)-1] : rd_ptr[$clog2(RD_DEPTH)-1];
-        rd_ptr[$clog2(RD_DEPTH)]   <= (rd_ptr[$clog2(RD_DEPTH)-1] & ~(|rd_ptr[$clog2(RD_DEPTH)-2:0]))? ~rd_ptr[$clog2(RD_DEPTH)] : rd_ptr[$clog2(RD_DEPTH)];
-    end
-end
-
-//when in fwft mode,rd_ptr need to add one to pre-extract from fifo,use gray code counter
-always @(posedge rd_clock or negedge rd_rst) begin
-    if(rd_rst == 1'b0)begin
-        rd_ptr_next_d1 <= 0;
+//when in fwft mode,rd_ptr need to add one to pre-extract from fifo
+always @(posedge rd_clock or posedge rd_rst) begin
+    if(rd_rst == 1'b1)begin
+        rd_ptr_next <= 0;
     end
     else if((rd_en | pre_read) & (~empty))begin
-        rd_ptr_next_d1 <= rd_ptr_next[$clog2(RD_DEPTH) - 2 : 0];
+        rd_ptr_next <= rd_ptr_next + 1'b1;
     end
 end
-
-always @(posedge rd_clock or negedge rd_rst) begin
-    if(rd_rst == 1'b0)begin
-        rd_ptr_next[0]                  <= 0;
-        rd_ptr_next[1]                  <= 0;
-        rd_ptr_next[$clog2(RD_DEPTH)-1] <= 0;
-        rd_ptr_next[$clog2(RD_DEPTH)]   <= 0;
-    end
-    else if((rd_en | pre_read) & (~empty))begin
-        rd_ptr_next[0]                  <= (~(rd_ptr_next_d1[0] ^ rd_ptr_next[0]))? ~rd_ptr_next[0] : rd_ptr_next[0];
-        rd_ptr_next[1]                  <= (~(rd_ptr_next_d1[1] ^ rd_ptr_next[1]) & rd_ptr_next[0]) ? ~rd_ptr_next[1] : rd_ptr_next[1];
-        rd_ptr_next[$clog2(RD_DEPTH)-1] <= ((rd_ptr_next[$clog2(RD_DEPTH)-1] ^ rd_ptr_next[$clog2(RD_DEPTH)-2]) & (~(|rd_ptr_next[$clog2(RD_DEPTH)-3:0]))) ? ~rd_ptr_next[$clog2(RD_DEPTH)-1] : rd_ptr_next[$clog2(RD_DEPTH)-1];
-        rd_ptr_next[$clog2(RD_DEPTH)]   <= (rd_ptr_next[$clog2(RD_DEPTH)-1] & ~(|rd_ptr_next[$clog2(RD_DEPTH)-2:0]))? ~rd_ptr_next[$clog2(RD_DEPTH)] : rd_ptr_next[$clog2(RD_DEPTH)];
-    end
-end
-
-genvar j;
-
-generate for(j=2;j<$clog2(RD_DEPTH)-1;j=j+1) begin : RD_GRAY_COUNTER
-
-    //rd_ptr
-    always @(posedge rd_clock or negedge rd_rst)begin
-        if(rd_rst == 1'b0)begin
-            rd_ptr[j] <= 1'b0;
-        end
-        else if(rd_en & (~empty))begin
-            if(~(rd_ptr_d1[j] ^ rd_ptr[j]) & rd_ptr[j-1] & ~(|rd_ptr[j-2:0]))begin
-                rd_ptr[j] <= ~rd_ptr[j];
-            end
-            else begin
-                rd_ptr[j] <= rd_ptr[j];
-            end 
-        end
-    end
-
-    //rd_ptr_next
-    always @(posedge rd_clock or negedge rd_rst)begin
-        if(rd_rst == 1'b0)begin
-            rd_ptr_next[j] <= 1'b0;
-        end
-        else if((rd_en | pre_read) & (~empty))begin
-            if(~(rd_ptr_next_d1[j] ^ rd_ptr_next[j]) & rd_ptr_next[j-1] & ~(|rd_ptr_next[j-2:0]))begin
-                rd_ptr_next[j] <= ~rd_ptr_next[j];
-            end
-            else begin
-                rd_ptr_next[j] <= rd_ptr_next[j];
-            end 
-        end
-    end
-end
-endgenerate
 
 //record the period before formal reading after pre reading
-always @(posedge rd_clock or negedge rd_rst) begin
-    if(rd_rst == 1'b0)begin
+always @(posedge rd_clock or posedge rd_rst) begin
+    if(rd_rst == 1'b1)begin
         pre_valid <= 1'b0;
     end
     else if(rd_en)begin
@@ -371,8 +253,8 @@ always @(posedge rd_clock or negedge rd_rst) begin
 end
 
 //mark the position of data pre-read from fifo
-always @(posedge rd_clock or negedge rd_rst) begin
-    if(rd_rst == 1'b0)begin
+always @(posedge rd_clock or posedge rd_rst) begin
+    if(rd_rst == 1'b1)begin
         rd_ptr_pre <= 1'b0;
     end
     else if(pre_read)begin
@@ -385,7 +267,7 @@ end
 
 //when in fwft mode,the change of ram_address need to use rd_ptr_fwft
 always @(*) begin
-    if(rd_rst == 1'b0)begin
+    if(rd_rst == 1'b1)begin
         rd_ptr_fwft <= 1'b0;
     end
     //when reading formally,rd_ptr need to add one to pre-extract from fifo
@@ -407,8 +289,8 @@ end
 //while fifo is not empty,pre-read data from fifo
 assign pre_read = (~empty) & empty_d1;
 
-always @(posedge rd_clock or negedge rd_rst) begin
-    if(rd_rst == 1'b0)begin
+always @(posedge rd_clock or posedge rd_rst) begin
+    if(rd_rst == 1'b1)begin
         empty_d1 <= 1'b1;
     end
     else begin
@@ -421,8 +303,8 @@ genvar i;
 //valid
 generate if(MODE == "Standard") begin : standard_mode_read
 
-    always @(posedge rd_clock or negedge rd_rst) begin
-        if(rd_rst == 1'b0)begin
+    always @(posedge rd_clock or posedge rd_rst) begin
+        if(rd_rst == 1'b1)begin
             valid <= 1'b0;
         end
         else begin
@@ -436,7 +318,7 @@ endgenerate
 generate if(MODE == "FWFT") begin : fwft_mode_read
 
     always @(*) begin
-        if(rd_rst == 1'b0)begin
+        if(rd_rst == 1'b1)begin
             valid <= 1'b0;
         end
         else begin
@@ -450,15 +332,16 @@ endgenerate
 generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
 
     reg  [RAM_NUM - 1 : 0]  ram_sel;    //choose which ram rd_data to output
+    wire [DW      - 1 : 0]  decode_data;//ecc decode output
 
     if(RAM_NUM >= 2)begin
 
         if(MODE == "Standard")begin
             
-            always @(posedge rd_clock or negedge rd_rst) begin
-                if(rd_rst == 1'b0)begin
+            always @(posedge rd_clock or posedge rd_rst) begin
+                if(rd_rst == 1'b1)begin
                     ram_sel[RAM_NUM - 1]     <= 1'b1;
-                    ram_sel[RAM_NUM - 2 : 0] <= 1'b0;
+                    ram_sel[RAM_NUM - 2 : 0] <= 0;
                 end
                 else if(rd_en & (~empty))begin
                     ram_sel <= {ram_sel[RAM_NUM - 2 : 0],ram_sel[RAM_NUM - 1]};
@@ -471,9 +354,9 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
         end
         else if(MODE == "FWFT")begin
             
-            always @(posedge rd_clock or negedge rd_rst) begin
-                if(rd_rst == 1'b0)begin
-                    ram_sel <= 1'b1;
+            always @(posedge rd_clock or posedge rd_rst) begin
+                if(rd_rst == 1'b1)begin
+                    ram_sel <= 1;
                 end
                 else if(rd_en & (~empty))begin
                     ram_sel <= {ram_sel[RAM_NUM - 2 : 0],ram_sel[RAM_NUM - 1]};
@@ -489,9 +372,34 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
 
     assign ram_wr_addr = wr_ptr;
 
-    for(i=0;i<RAM_NUM;i=i+1)begin
+    for(i=0;i<RAM_NUM;i=i+1)begin : B2S_DUAL_PORT_RAM
 
         assign ram_wr_en[i] = wr_en & (~full);
+
+        if(ECC_MODE == "no_ecc")begin
+            assign ram_wr_data = din;
+            assign sbiterr     = 1'b0;
+            assign dbiterr     = 1'b0;
+        end
+        else if(ECC_MODE == "en_ecc")begin
+            //ecc encoder
+            ecc_encode #(
+                .DW     (DW),
+                .PW     (PW)) 
+            u_ecc_encode(
+                .data_i (din),
+                .data_o (ram_wr_data));
+
+            //ecc decoder
+                ecc_decode #(
+                    .DW (DW),
+                    .PW (PW)) 
+                u_ecc_decode(
+                    .data_i  (ram_rd_data),
+                    .data_o  (decode_data),
+                    .sbiterr (sbiterr),
+                    .dbiterr (dbiterr));
+        end
 
         if(MODE == "Standard")begin
             assign ram_rd_en[i] = rd_en & (~empty);
@@ -510,13 +418,13 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
 	            .ena   	( 1'b1        ),
 	            .wea   	( ram_wr_en[i]),
 	            .addra 	( ram_wr_addr[$clog2(RAM_DEPTH) - 1 : 0]),
-	            .dina  	( din[(i+1) * RAM_WIDTH - 1 : i * RAM_WIDTH]),
+	            .dina  	( ram_wr_data[(i+1) * RAM_WIDTH - 1 : i * RAM_WIDTH]),
 	            .douta 	(             ),
 	            .clkb  	( rd_clock    ),
 	            .enb   	( ram_rd_en[i]),
-	            .web   	(             ),
+	            .web   	( 1'b0        ),
 	            .addrb 	( ram_rd_addr[$clog2(RAM_DEPTH) - 1 : 0]),
-	            .dinb  	(             ),
+	            .dinb  	( {RAM_WIDTH{1'b1}}),
 	            .doutb 	( ram_rd_data[(i+1) * RAM_WIDTH - 1 : i * RAM_WIDTH]));
         end
         else if(DIRECTION == "MSB")begin
@@ -529,13 +437,13 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
 	            .ena   	( 1'b1        ),
 	            .wea   	( ram_wr_en[i]),
 	            .addra 	( ram_wr_addr[$clog2(RAM_DEPTH) - 1 : 0]),
-	            .dina  	( din[(i+1) * RAM_WIDTH - 1 : i * RAM_WIDTH]),
+	            .dina  	( ram_wr_data[(i+1) * RAM_WIDTH - 1 : i * RAM_WIDTH]),
 	            .douta 	(             ),
 	            .clkb  	( rd_clock    ),
 	            .enb   	( ram_rd_en[i]),
-	            .web   	(             ),
+	            .web   	( 1'b0        ),
 	            .addrb 	( ram_rd_addr[$clog2(RAM_DEPTH) - 1 : 0]),
-	            .dinb  	(             ),
+	            .dinb  	( {RAM_WIDTH{1'b1}}),
 	            .doutb 	( ram_rd_data[RAM_RD_WIDTH - i * RAM_WIDTH - 1 : RAM_RD_WIDTH - (i+1) * RAM_WIDTH]));
         end
     end
@@ -548,31 +456,51 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
         assign ram_rd_addr = rd_ptr_fwft >> $clog2(RAM_NUM);
     end
 
+    //rd_addr
+    if(MODE == "Standard")begin
+        assign rd_addr = rd_ptr;
+    end
+    else if(MODE == "FWFT")begin
+        assign rd_addr = rd_ptr_fwft;
+    end
+
     //rd_data
     case(RAM_NUM)
 
         4'd1:begin
-            always @(*) begin
-                if(rd_rst == 1'b0)begin
-                    dout <= 1'b0;
+            if(ECC_MODE == "no_ecc")begin
+                always @(*) begin
+                    if(rd_rst == 1'b1)begin
+                        dout = 0;
+                    end
+                    else begin
+                        dout = ram_rd_data;
+                    end
+                end
             end
-                else begin
-                    dout <= ram_rd_data;
+            else if(ECC_MODE == "en_ecc")begin
+                always @(*) begin
+                    if(rd_rst == 1'b1)begin
+                        dout = 0;
+                    end
+                    else begin
+                        dout = decode_data;
+                    end
                 end
             end
         end
 
         4'd2:begin
             always @(*) begin
-                if(rd_rst == 1'b0)begin
-                    dout <= 1'b0;
+                if(rd_rst == 1'b1)begin
+                    dout = 0;
                 end
                 else begin
                     case(ram_sel)
-                        2'b01 : dout <= ram_rd_data[OUTPUT_WIDTH - 1 : 0];
-                        2'b10 : dout <= ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
+                        2'b01 : dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
+                        2'b10 : dout = ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
                         default:begin
-                            dout     <= ram_rd_data[OUTPUT_WIDTH - 1 : 0];
+                            dout     = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
                         end
                     endcase
                 end
@@ -581,17 +509,17 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
 
         4'd4:begin
             always @(*) begin
-                if(rd_rst == 1'b0)begin
-                    dout <= 1'b0;
+                if(rd_rst == 1'b1)begin
+                    dout = 0;
                 end
                 else begin
                     case(ram_sel)
-                        4'b0001 : dout <= ram_rd_data[OUTPUT_WIDTH - 1 : 0];
-                        4'b0010 : dout <= ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
-                        4'b0100 : dout <= ram_rd_data[OUTPUT_WIDTH * 3 - 1 : OUTPUT_WIDTH * 2];
-                        4'b1000 : dout <= ram_rd_data[OUTPUT_WIDTH * 4 - 1 : OUTPUT_WIDTH * 3];
+                        4'b0001 : dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
+                        4'b0010 : dout = ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
+                        4'b0100 : dout = ram_rd_data[OUTPUT_WIDTH * 3 - 1 : OUTPUT_WIDTH * 2];
+                        4'b1000 : dout = ram_rd_data[OUTPUT_WIDTH * 4 - 1 : OUTPUT_WIDTH * 3];
                         default : begin
-                            dout       <= ram_rd_data[OUTPUT_WIDTH - 1 : 0];
+                            dout       = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
                         end
                     endcase
                 end
@@ -600,21 +528,21 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
 
         4'd8:begin
             always @(*) begin
-                if(rd_rst == 1'b0)begin
-                    dout <= 1'b0;
+                if(rd_rst == 1'b1)begin
+                    dout <= 0;
                 end
                 else begin
                     case(ram_sel)
-                        8'b0000_0001 : dout <= ram_rd_data[OUTPUT_WIDTH - 1 : 0];
-                        8'b0000_0010 : dout <= ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
-                        8'b0000_0100 : dout <= ram_rd_data[OUTPUT_WIDTH * 3 - 1 : OUTPUT_WIDTH * 2];
-                        8'b0000_1000 : dout <= ram_rd_data[OUTPUT_WIDTH * 4 - 1 : OUTPUT_WIDTH * 3];
-                        8'b0001_0000 : dout <= ram_rd_data[OUTPUT_WIDTH * 5 - 1 : OUTPUT_WIDTH * 4];
-                        8'b0010_0000 : dout <= ram_rd_data[OUTPUT_WIDTH * 6 - 1 : OUTPUT_WIDTH * 5];
-                        8'b0100_0000 : dout <= ram_rd_data[OUTPUT_WIDTH * 7 - 1 : OUTPUT_WIDTH * 6];
-                        8'b1000_0000 : dout <= ram_rd_data[OUTPUT_WIDTH * 8 - 1 : OUTPUT_WIDTH * 7];
+                        8'b0000_0001 : dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
+                        8'b0000_0010 : dout = ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
+                        8'b0000_0100 : dout = ram_rd_data[OUTPUT_WIDTH * 3 - 1 : OUTPUT_WIDTH * 2];
+                        8'b0000_1000 : dout = ram_rd_data[OUTPUT_WIDTH * 4 - 1 : OUTPUT_WIDTH * 3];
+                        8'b0001_0000 : dout = ram_rd_data[OUTPUT_WIDTH * 5 - 1 : OUTPUT_WIDTH * 4];
+                        8'b0010_0000 : dout = ram_rd_data[OUTPUT_WIDTH * 6 - 1 : OUTPUT_WIDTH * 5];
+                        8'b0100_0000 : dout = ram_rd_data[OUTPUT_WIDTH * 7 - 1 : OUTPUT_WIDTH * 6];
+                        8'b1000_0000 : dout = ram_rd_data[OUTPUT_WIDTH * 8 - 1 : OUTPUT_WIDTH * 7];
                         default:begin
-                            dout            <= ram_rd_data[OUTPUT_WIDTH - 1 : 0];
+                            dout            = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
                         end
                     endcase
                 end
@@ -624,28 +552,28 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
     endcase
 
     //wr_data_count
-    always @(*) begin
-        if(wr_rst == 1'b0)begin
-            wr_data_count <= 1'b0;
+    always @(posedge wr_clock or posedge wr_rst) begin
+        if(wr_rst == 1'b1)begin
+            wr_data_count <= 0;
         end
-        else if(ram_wr_addr[$clog2(RAM_DEPTH)] ^ ram_rd_addr_g_d2[$clog2(RAM_DEPTH)])begin
-            wr_data_count <= {1'b1,ram_wr_addr_b[$clog2(RAM_DEPTH) - 1 : 0]} - {1'b0,ram_rd_addr_b_d2[$clog2(RAM_DEPTH) - 1 : 0]};
+        else if(ram_wr_addr_g[$clog2(RAM_DEPTH)] ^ ram_rd_wr_addr_g[$clog2(RAM_DEPTH)])begin
+            wr_data_count <= {1'b1,ram_wr_addr[$clog2(RAM_DEPTH) - 1 : 0]} - {1'b0,ram_rd_wr_addr_b[$clog2(RAM_DEPTH) - 1 : 0]};
         end
         else begin
-            wr_data_count <= ram_wr_addr_b - ram_rd_addr_b_d2;
+            wr_data_count <= ram_wr_addr - ram_rd_wr_addr_b;
         end
     end
 
     //rd_data_count
-    always @(*) begin
-        if(rd_rst == 1'b0)begin
-            rd_data_count <= 1'b0;
+    always @(posedge rd_clock or posedge rd_rst) begin
+        if(rd_rst == 1'b1)begin
+            rd_data_count <= 0;
         end
-        else if(ram_rd_addr[$clog2(RAM_DEPTH)] ^ ram_wr_addr_g_d2[$clog2(RAM_DEPTH)])begin
-            rd_data_count <= RAM_NUM * {1'b1,ram_wr_addr_b_d2[$clog2(RAM_DEPTH) - 1 : 0]} - {1'b0,rd_ptr_b[$clog2(RD_DEPTH) - 1 : 0]};
+        else if(ram_rd_addr_g[$clog2(RAM_DEPTH)] ^ ram_wr_rd_addr_g[$clog2(RAM_DEPTH)])begin
+            rd_data_count <= RAM_NUM * {1'b1,ram_wr_rd_addr_b[$clog2(RAM_DEPTH) - 1 : 0]} - {1'b0,rd_addr[$clog2(RD_DEPTH) - 1 : 0]};
         end
         else begin
-            rd_data_count <= RAM_NUM * ram_wr_addr_b_d2 - rd_ptr_b;
+            rd_data_count <= RAM_NUM * ram_wr_rd_addr_b - rd_addr;
         end
     end
 
@@ -656,8 +584,8 @@ generate if(INPUT_WIDTH < OUTPUT_WIDTH) begin : SMALL_TO_BIG_RAM
     
     reg  [RAM_NUM - 1 : 0]           wr_en_d1;      //when input_width < output_width,enable each memory sequentially
 
-    always @(posedge wr_clock or negedge wr_rst) begin
-        if(wr_rst == 1'b0)begin
+    always @(posedge wr_clock or posedge wr_rst) begin
+        if(wr_rst == 1'b1)begin
             wr_en_d1 <= 1'b1;
         end
         else if(wr_en)begin
@@ -694,9 +622,9 @@ generate if(INPUT_WIDTH < OUTPUT_WIDTH) begin : SMALL_TO_BIG_RAM
 	            .douta 	(             ),
 	            .clkb  	( rd_clock    ),
 	            .enb   	( ram_rd_en[i]),
-	            .web   	(             ),
+	            .web   	( 1'b0        ),
 	            .addrb 	( ram_rd_addr[$clog2(RAM_DEPTH) - 1 : 0]),
-	            .dinb  	(             ),
+	            .dinb  	( {RAM_WIDTH{1'b1}}),
 	            .doutb 	( ram_rd_data[(i+1) * RAM_WIDTH - 1 : i * RAM_WIDTH]));
         end
         else if(DIRECTION == "MSB")begin
@@ -712,9 +640,9 @@ generate if(INPUT_WIDTH < OUTPUT_WIDTH) begin : SMALL_TO_BIG_RAM
 	            .douta 	(             ),
 	            .clkb  	( rd_clock    ),
 	            .enb   	( ram_rd_en[i]),
-	            .web   	(             ),
+	            .web   	( 1'b0        ),
 	            .addrb 	( ram_rd_addr[$clog2(RAM_DEPTH) - 1 : 0]),
-	            .dinb  	(             ),
+	            .dinb  	( {RAM_WIDTH{1'b1}}),
 	            .doutb 	( ram_rd_data[RAM_RD_WIDTH - i * RAM_WIDTH - 1 : RAM_RD_WIDTH - (i+1) * RAM_WIDTH]));
         end
     end
@@ -727,39 +655,47 @@ generate if(INPUT_WIDTH < OUTPUT_WIDTH) begin : SMALL_TO_BIG_RAM
         assign ram_rd_addr = rd_ptr_fwft;
     end
 
+    //rd_addr
+    if(MODE == "Standard")begin
+        assign rd_addr = rd_ptr;
+    end
+    else if(MODE == "FWFT")begin
+        assign rd_addr = rd_ptr_fwft;
+    end
+
     //rd_data
     always @(*) begin
-        if(rd_rst == 1'b0)begin
-            dout <= 1'b0;
+        if(rd_rst == 1'b1)begin
+            dout = 0;
         end
         else begin
-            dout <= ram_rd_data;
+            dout = ram_rd_data;
         end
     end
 
     //wr_data_count
-    always @(*) begin
-        if(wr_rst == 1'b0)begin
-            wr_data_count <= 1'b0;
+    always @(posedge wr_clock or posedge wr_rst) begin
+        if(wr_rst == 1'b1)begin
+            wr_data_count <= 0;
         end
-        else if(ram_wr_addr[$clog2(RAM_DEPTH)] ^ ram_rd_addr_g_d2[$clog2(RAM_DEPTH)])begin
-            wr_data_count <= {1'b1,wr_ptr_b[$clog2(WR_DEPTH) - 1 : 0]} - RAM_NUM * {1'b0,ram_rd_addr_b_d2[$clog2(RAM_DEPTH) - 1 : 0]};
+        else if(ram_wr_addr_g[$clog2(RAM_DEPTH)] ^ ram_rd_wr_addr_g[$clog2(RAM_DEPTH)])begin
+            wr_data_count <= {1'b1,wr_ptr[$clog2(WR_DEPTH) - 1 : 0]} - RAM_NUM * {1'b0,ram_rd_wr_addr_b[$clog2(RAM_DEPTH) - 1 : 0]};
         end
         else begin
-            wr_data_count <= wr_ptr_b - RAM_NUM * ram_rd_addr_b_d2;
+            wr_data_count <= wr_ptr - RAM_NUM * ram_rd_wr_addr_b;
         end
     end
 
     //rd_data_count
-    always @(*) begin
-        if(rd_rst == 1'b0)begin
-            rd_data_count  <= 1'b0;
+    always @(posedge rd_clock or posedge rd_rst) begin
+        if(rd_rst == 1'b1)begin
+            rd_data_count  <= 0;
         end
-        else if(ram_rd_addr[$clog2(RAM_DEPTH)] ^ ram_wr_addr_g_d2[$clog2(RAM_DEPTH)])begin
-             rd_data_count <= {1'b1,ram_wr_addr_b_d2[$clog2(RAM_DEPTH) - 1 : 0]} - {1'b0,ram_rd_addr_b[$clog2(RAM_DEPTH) - 1 : 0]};
+        else if(ram_rd_addr_g[$clog2(RAM_DEPTH)] ^ ram_wr_rd_addr_g[$clog2(RAM_DEPTH)])begin
+             rd_data_count <= {1'b1,ram_wr_rd_addr_b[$clog2(RAM_DEPTH) - 1 : 0]} - {1'b0,rd_addr[$clog2(RAM_DEPTH) - 1 : 0]};
         end
         else begin
-            rd_data_count  <= ram_wr_addr_b_d2 - ram_rd_addr_b;
+            rd_data_count  <= ram_wr_rd_addr_b - rd_addr;
         end
     end
 
@@ -767,130 +703,83 @@ end
 endgenerate
 
 //full and empty operation
+assign full  = (ram_wr_addr_g == {~ram_rd_wr_addr_g[$clog2(RAM_DEPTH) : $clog2(RAM_DEPTH) - 1],ram_rd_wr_addr_g[$clog2(RAM_DEPTH) - 2 : 0]}) ? 1'b1 : 1'b0;
+
+assign empty = (ram_rd_addr_g == ram_wr_rd_addr_g) ? 1'b1 : 1'b0;
+
+//ram address binary to gray code
+assign ram_wr_addr_g = (ram_wr_addr >> 1) ^ ram_wr_addr;
+
+assign ram_rd_addr_g = (ram_rd_addr >> 1) ^ ram_rd_addr;
+
+//in read clock domain,ram_wr_addr_g takes two beats
+always @(posedge rd_clock or posedge rd_rst) begin
+    if(rd_rst == 1'b1)begin
+        ram_wr_addr_g_d1 <= 0;
+        ram_wr_rd_addr_g <= 0;
+    end
+    else begin
+        ram_wr_addr_g_d1 <= ram_wr_addr_g;
+        ram_wr_rd_addr_g <= ram_wr_addr_g_d1;
+    end
+end
+
+//in write clock domain,ram_rd_addr_g takes two beats
+always @(posedge wr_clock or posedge wr_rst) begin
+    if(wr_rst == 1'b1)begin
+        ram_rd_addr_g_d1 <= 0;
+        ram_rd_wr_addr_g <= 0;
+    end
+    else begin
+        ram_rd_addr_g_d1 <= ram_rd_addr_g;
+        ram_rd_wr_addr_g <= ram_rd_addr_g_d1;
+    end
+end
+
 integer k;
 
-//wr_ptr gray to binary
+//in read clock domain,ram_wr_addr_g gray code to binary
 always @(*) begin
-    if(wr_rst == 1'b0)begin
-        wr_ptr_b <= 1'b0;
+    if(rd_rst == 1'b1)begin
+        ram_wr_rd_addr_b = 0;
     end
     else begin
-        wr_ptr_b[$clog2(WR_DEPTH)]   <= wr_ptr[$clog2(WR_DEPTH)];
-        wr_ptr_b[$clog2(WR_DEPTH)-1] <= wr_ptr[$clog2(WR_DEPTH)-1];
-        for(k=1;k<=$clog2(WR_DEPTH)-1;k=k+1)begin
-            wr_ptr_b[k-1]           <= wr_ptr[k-1] ^ wr_ptr_b[k];
+        for(k=0;k<$clog2(RAM_DEPTH)+1;k=k+1)begin
+            ram_wr_rd_addr_b[k] = ^(ram_wr_rd_addr_g >> k);
         end
     end
 end
 
-//rd_ptr gray to binary
-generate if(MODE == "Standard") begin : standard_g2b
-
-    always @(*) begin
-        if(rd_rst == 1'b0)begin
-            rd_ptr_b <= 1'b0;
-        end
-        else begin
-            rd_ptr_b[$clog2(RD_DEPTH)]   <= rd_ptr[$clog2(RD_DEPTH)];
-            rd_ptr_b[$clog2(RD_DEPTH)-1] <= rd_ptr[$clog2(RD_DEPTH)-1];
-            for(k=1;k<=$clog2(RD_DEPTH)-1;k=k+1)begin
-                rd_ptr_b[k-1]           <= rd_ptr[k-1] ^ rd_ptr_b[k];
-        end
-        end
-    end
-
-end
-endgenerate
-
-generate if(MODE == "FWFT") begin : fwft_g2b
-
-    always @(*) begin
-        if(rd_rst == 1'b0)begin
-            rd_ptr_b <= 1'b0;
-        end
-        else begin
-            rd_ptr_b[$clog2(RD_DEPTH)]   <= rd_ptr_fwft[$clog2(RD_DEPTH)];
-            rd_ptr_b[$clog2(RD_DEPTH)-1] <= rd_ptr_fwft[$clog2(RD_DEPTH)-1];
-            for(k=1;k<=$clog2(RD_DEPTH)-1;k=k+1)begin
-                rd_ptr_b[k-1]            <= rd_ptr_fwft[k-1] ^ rd_ptr_b[k];
-            end
-        end
-    end
-end
-endgenerate
-
-//ram_wr_addr gray to binary
-assign ram_wr_addr_b = (INPUT_WIDTH >= OUTPUT_WIDTH) ? wr_ptr_b : wr_ptr_b >> $clog2(RAM_NUM);
-
-//ram_rd_addr to binary
-assign ram_rd_addr_b = (INPUT_WIDTH >= OUTPUT_WIDTH) ? rd_ptr_b >> $clog2(RAM_NUM) : rd_ptr_b;
-
-//in read clock domain,ram_wr_addr_g takes two beats 
-always @(posedge rd_clock or negedge rd_rst) begin
-    if(rd_rst == 1'b0)begin
-        ram_wr_addr_g_d1 <= 1'b0;
-        ram_wr_addr_g_d2 <= 1'b0;
-    end
-    else begin
-        ram_wr_addr_g_d1 <= ram_wr_addr;
-        ram_wr_addr_g_d2 <= ram_wr_addr_g_d1;
-    end
-end
-
-//in write clock domain,ram_rd_addr_g takes two beats 
-always @(posedge wr_clock or negedge wr_rst) begin
-    if(wr_rst == 1'b0)begin
-        ram_rd_addr_g_d1 <= 1'b0;
-        ram_rd_addr_g_d2 <= 1'b0;
-    end
-    else begin
-        ram_rd_addr_g_d1 <= ram_rd_addr;
-        ram_rd_addr_g_d2 <= ram_rd_addr_g_d1;
-    end
-end
-
-//ram_wr_addr_g_d2 gray to binary
+//in write clock domain,ram_rd_wr_addr_g gray code to binary
 always @(*) begin
-    if(rd_rst == 1'b0)begin
-        ram_wr_addr_b_d2 <= 1'b0;
+    if(wr_rst == 1'b1)begin
+        ram_rd_wr_addr_b = 0;
     end
     else begin
-        ram_wr_addr_b_d2[$clog2(RAM_DEPTH)]   <= ram_wr_addr_g_d2[$clog2(RAM_DEPTH)];
-        ram_wr_addr_b_d2[$clog2(RAM_DEPTH)-1] <= ram_wr_addr_g_d2[$clog2(RAM_DEPTH)-1];
-        for(k=1;k<=$clog2(RAM_DEPTH)-1;k=k+1)begin
-            ram_wr_addr_b_d2[k-1]           <= ram_wr_addr_g_d2[k-1] ^ ram_wr_addr_b_d2[k];
+        for(k=0;k<$clog2(RAM_DEPTH)+1;k=k+1)begin
+            ram_rd_wr_addr_b[k] = ^(ram_rd_wr_addr_g >> k);
         end
     end
 end
-
-//ram_rd_addr_g_d2 gray to binary
-always @(*) begin
-    if(wr_rst == 1'b0)begin
-        ram_rd_addr_b_d2 <= 1'b0;
-    end
-    else begin
-        ram_rd_addr_b_d2[$clog2(RAM_DEPTH)]   <= ram_rd_addr_g_d2[$clog2(RAM_DEPTH)];
-        ram_rd_addr_b_d2[$clog2(RAM_DEPTH)-1] <= ram_rd_addr_g_d2[$clog2(RAM_DEPTH)-1];
-        for(k=1;k<=$clog2(RAM_DEPTH)-1;k=k+1)begin
-            ram_rd_addr_b_d2[k-1]           <= ram_rd_addr_g_d2[k-1] ^ ram_rd_addr_b_d2[k];
-        end
-    end
-end
-
-assign full          = (ram_wr_addr[$clog2(RAM_DEPTH)]         != ram_rd_addr_g_d2[$clog2(RAM_DEPTH)]) && 
-                       (ram_wr_addr[$clog2(RAM_DEPTH) - 1 : 0] == ram_rd_addr_g_d2[$clog2(RAM_DEPTH) - 1 : 0]) ? 1'b1 : 1'b0;
-
-assign empty         = (ram_rd_addr == ram_wr_addr_g_d2) ? 1'b1 : 1'b0;
 
 //fifo is about to be full
 generate if(USE_ADV_FEATURES[3] == 1'b1) begin : ALMOST_FULL_ENABLE
 
-    if(INPUT_WIDTH >= OUTPUT_WIDTH)begin
-        assign almost_full = (rd_data_count == RD_DEPTH - 1) ? 1'b1 : 1'b0;
-    end
-    else if(INPUT_WIDTH < OUTPUT_WIDTH)begin
-        assign almost_full = (wr_data_count == WR_DEPTH - 1) ? 1'b1 : 1'b0;
-    end
+    assign almost_full = (ram_wr_addr - ram_rd_wr_addr_b >= RAM_DEPTH - 1) ? 1'b1 : 1'b0;
+    // always @(posedge wr_clock or posedge wr_rst) begin
+    //     if(wr_rst == 1'b1)begin
+    //         almost_full <= 1'b0;
+    //     end
+    //     else if(ram_wr_addr_b - ram_rd_addr_b_d2 == RAM_DEPTH - 2)begin
+    //         almost_full <= wr_en;
+    //     end
+    //     else if(ram_wr_addr_b - ram_rd_addr_b_d2 >= RAM_DEPTH - 1)begin
+    //         almost_full <= 1'b1;
+    //     end
+    //     else begin
+    //         almost_full <= 1'b0;
+    //     end
+    // end
 
 end
 endgenerate
@@ -898,6 +787,9 @@ endgenerate
 generate if(USE_ADV_FEATURES[3] == 1'b0) begin : ALMOST_FULL_DISABLE
 
     assign almost_full = 1'b0;
+    // always @(*) begin
+    //     almost_full = 1'b0;
+    // end
 
 end
 endgenerate
@@ -905,12 +797,21 @@ endgenerate
 //fifo is about to be empty
 generate if(USE_ADV_FEATURES[11] == 1'b1) begin : ALMOST_EMPTY_ENABLE
 
-    if(INPUT_WIDTH >= OUTPUT_WIDTH)begin
-        assign almost_empty = (rd_data_count == 1'b1) ? 1'b1 : 1'b0;
-    end
-    else if(INPUT_WIDTH < OUTPUT_WIDTH)begin
-        assign almost_empty = (wr_data_count == 1'b1) ? 1'b1 : 1'b0;
-    end
+    assign almost_empty = (ram_wr_rd_addr_b - ram_rd_addr <= 1) ? 1'b1 : 1'b0;
+    // always @(posedge rd_clock or posedge rd_rst) begin
+    //     if(rd_rst == 1'b1)begin
+    //         almost_empty <= 1'b1;
+    //     end
+    //     else if(ram_wr_addr_b_d2 - ram_rd_addr_b == 2)begin
+    //         almost_empty <= rd_en;
+    //     end
+    //     else if(ram_wr_addr_b_d2 - ram_rd_addr_b <= 1)begin
+    //         almost_empty <= 1'b1;
+    //     end
+    //     else begin
+    //         almost_empty <= 1'b0;
+    //     end
+    // end
 
 end
 endgenerate
@@ -918,6 +819,9 @@ endgenerate
 generate if(USE_ADV_FEATURES[11] == 1'b0) begin : ALMOST_EMPTY_DISABLE
 
     assign almost_empty = 1'b0;
+    // always @(*) begin
+    //     almost_empty = 1'b0;
+    // end
 
 end
 endgenerate
@@ -925,12 +829,7 @@ endgenerate
 //the amount of data in the fifo is greater than or equal to the programmable full threshold
 generate if(USE_ADV_FEATURES[1] == 1'b1) begin : PROG_FULL_ENABLE
     
-    if(INPUT_WIDTH >= OUTPUT_WIDTH)begin
-        assign prog_full = (rd_data_count >= PROG_FULL_THRESH) ? 1'b1 : 1'b0;
-    end
-    else if(INPUT_WIDTH < OUTPUT_WIDTH)begin
-        assign prog_full = (wr_data_count >= PROG_FULL_THRESH) ? 1'b1 : 1'b0;
-    end
+    assign prog_full = (wr_data_count >= PROG_FULL_THRESH) ? 1'b1 : 1'b0;
 
 end
 endgenerate
@@ -945,12 +844,7 @@ endgenerate
 //the amount of data in the FIFO is less than or equal to the programmable null threshold
 generate if(USE_ADV_FEATURES[9] == 1'b1) begin : PROG_EMPTY_ENABLE
     
-    if(INPUT_WIDTH >= OUTPUT_WIDTH)begin
-        assign prog_empty = (rd_data_count <= PROG_EMPTY_THRESH) ? 1'b1 : 1'b0;
-    end
-    else if(INPUT_WIDTH < OUTPUT_WIDTH)begin
-        assign prog_empty = (wr_data_count <= PROG_EMPTY_THRESH) ? 1'b1 : 1'b0;
-    end
+    assign prog_empty = (rd_data_count <= PROG_EMPTY_THRESH) ? 1'b1 : 1'b0;
 
 end
 endgenerate
@@ -965,17 +859,12 @@ endgenerate
 //the write request from the previous clock cycle was rejected because the FIFO is now full
 generate if(USE_ADV_FEATURES[0] == 1'b1) begin : OVERFLOW_ENABLE
     
-    always @(posedge wr_clock or negedge wr_rst) begin
-        if(wr_rst == 1'b0)begin
+    always @(posedge wr_clock or posedge wr_rst) begin
+        if(wr_rst == 1'b1)begin
             overflow <= 1'b0;
         end
         else if(full)begin
-            if(wr_en)begin
-                overflow <= 1'b1;
-            end
-            else begin
-                overflow <= overflow;
-            end
+            overflow <= wr_en;
         end
         else begin
             overflow <= 1'b0;
@@ -988,7 +877,7 @@ endgenerate
 generate if(USE_ADV_FEATURES[0] == 1'b0) begin : OVERFLOW_DISABLE
     
     always @(*) begin
-        overflow <= 1'b0;
+        overflow = 1'b0;
     end
 
 end
@@ -997,20 +886,15 @@ endgenerate
 //the read request from the previous clock cycle was rejected because the FIFO is now empty
 generate if(USE_ADV_FEATURES[8] == 1'b1) begin : UNDERFLOW_ENABLE
     
-    always @(posedge rd_clock or negedge rd_rst) begin
-        if(rd_rst == 1'b0)begin
+    always @(posedge rd_clock or posedge rd_rst) begin
+        if(rd_rst == 1'b1)begin
             underflow <= 1'b0;
         end
         else if(empty)begin
-            if(rd_en)begin
-                underflow <= 1'b1;
-            end
-            else begin
-                underflow <= underflow;
-            end
+            underflow <= rd_en;
         end
         else begin
-            overflow <= 1'b0;
+            underflow <= 1'b0;
         end
     end
 

@@ -421,7 +421,7 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
 	            .ena   	( 1'b1        ),
 	            .wea   	( ram_wr_en[i]),
 	            .addra 	( ram_wr_addr[$clog2(RAM_DEPTH) - 1 : 0]),
-	            .dina  	( din[(i+1) * RAM_WIDTH - 1 : i * RAM_WIDTH]),
+	            .dina  	( ram_wr_data[(i+1) * RAM_WIDTH - 1 : i * RAM_WIDTH]),
 	            .douta 	(             ),
 	            .clkb  	( clock       ),
 	            .enb   	( ram_rd_en[i]),
@@ -455,7 +455,7 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
             if(ECC_MODE == "no_ecc")begin
                 always @(*) begin
                     if(reset == 1'b1)begin
-                        dout = 1'b0;
+                        dout = 0;
                     end
                     else begin
                         dout = ram_rd_data;
@@ -465,7 +465,7 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
             else if(ECC_MODE == "en_ecc")begin
                 always @(*) begin
                     if(reset == 1'b1)begin
-                        dout = 1'b0;
+                        dout = 0;
                     end
                     else begin
                         dout = decode_data;
@@ -477,7 +477,7 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
         4'd2:begin
             always @(*) begin
                 if(reset == 1'b1)begin
-                    dout = 1'b0;
+                    dout = 0;
                 end
                 else begin
                     case(ram_sel)
@@ -494,7 +494,7 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
         4'd4:begin
             always @(*) begin
                 if(reset == 1'b1)begin
-                    dout = 1'b0;
+                    dout = 0;
                 end
                 else begin
                     case(ram_sel)

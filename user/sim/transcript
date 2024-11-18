@@ -18,110 +18,278 @@
 # vmap work work 
 # Modifying F:\FPGA_Project\IP_lib\modelsim.ini
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 11:34:09 on Oct 27,2024
-# vlog -reportprogress 300 -work work ../sim/tb_spi.v 
-# -- Compiling module tb_spi
+# Start time: 22:42:31 on Nov 16,2024
+# vlog -reportprogress 300 -work work ../sim/tb_async_fifo.v 
+# -- Compiling module tb_async_fifo
 # 
 # Top level modules:
-# 	tb_spi
-# End time: 11:34:09 on Oct 27,2024, Elapsed time: 0:00:00
+# 	tb_async_fifo
+# End time: 22:42:31 on Nov 16,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 11:34:09 on Oct 27,2024
-# vlog -reportprogress 300 -work work ../src/Interface/SPI.v 
-# -- Compiling module SPI
-# 
-# Top level modules:
-# 	SPI
-# End time: 11:34:09 on Oct 27,2024, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 0
-# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 11:34:09 on Oct 27,2024
-# vlog -reportprogress 300 -work work ../src/Interface/spi_slave.v 
-# -- Compiling module spi_slave
-# 
-# Top level modules:
-# 	spi_slave
-# End time: 11:34:09 on Oct 27,2024, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 0
-# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 11:34:13 on Oct 27,2024
+# Start time: 22:42:32 on Nov 16,2024
 # vlog -reportprogress 300 -work work ../src/memory/FIFO/DPRAM.v 
 # -- Compiling module DPRAM
 # 
 # Top level modules:
 # 	DPRAM
-# End time: 11:34:13 on Oct 27,2024, Elapsed time: 0:00:00
+# End time: 22:42:32 on Nov 16,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 11:34:13 on Oct 27,2024
+# Start time: 22:42:32 on Nov 16,2024
 # vlog -reportprogress 300 -sv ../src/memory/FIFO/ecc_encode.sv 
 # -- Compiling module ecc_encode
 # 
 # Top level modules:
 # 	ecc_encode
-# End time: 11:34:13 on Oct 27,2024, Elapsed time: 0:00:00
+# End time: 22:42:32 on Nov 16,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 11:34:13 on Oct 27,2024
+# Start time: 22:42:32 on Nov 16,2024
 # vlog -reportprogress 300 -sv ../src/memory/FIFO/ecc_decode.sv 
 # -- Compiling module ecc_decode
 # 
 # Top level modules:
 # 	ecc_decode
-# End time: 11:34:13 on Oct 27,2024, Elapsed time: 0:00:00
+# End time: 22:42:32 on Nov 16,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
-# Start time: 11:34:14 on Oct 27,2024
-# vlog -reportprogress 300 -work work ../src/memory/FIFO/sync_fifo.v 
-# -- Compiling module sync_fifo
+# Start time: 22:42:33 on Nov 16,2024
+# vlog -reportprogress 300 -work work ../src/memory/FIFO/async_fifo.v 
+# -- Compiling module async_fifo
 # 
 # Top level modules:
-# 	sync_fifo
-# End time: 11:34:14 on Oct 27,2024, Elapsed time: 0:00:00
+# 	async_fifo
+# End time: 22:42:33 on Nov 16,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
-# vsim -t ps "+notimingchecks" -gui -voptargs=""+acc"" work.tb_spi 
-# Start time: 11:34:14 on Oct 27,2024
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 22:42:33 on Nov 16,2024
+# vlog -reportprogress 300 -sv ../sim/xpm_fifo.sv 
+# -- Compiling module xpm_fifo_base
+# ** Warning: ../sim/xpm_fifo.sv(1440): (vlog-2643) Unterminated string literal continues onto next line.
+# ** Warning: ../sim/xpm_fifo.sv(1443): (vlog-2643) Unterminated string literal continues onto next line.
+# ** Warning: ../sim/xpm_fifo.sv(1455): (vlog-2643) Unterminated string literal continues onto next line.
+# -- Compiling module xpm_fifo_rst
+# -- Compiling module xpm_counter_updn
+# -- Compiling module xpm_fifo_reg_vec
+# -- Compiling module xpm_fifo_reg_bit
+# -- Compiling module xpm_reg_pipe_bit
+# -- Compiling module xpm_fifo_sync
+# -- Compiling module xpm_fifo_async
+# -- Compiling module xpm_fifo_axis
+# -- Compiling module xpm_fifo_axif
+# -- Compiling module xpm_fifo_axil
+# -- Compiling module xpm_fifo_axi_reg_slice
+# 
+# Top level modules:
+# 	xpm_fifo_sync
+# 	xpm_fifo_async
+# 	xpm_fifo_axis
+# 	xpm_fifo_axif
+# 	xpm_fifo_axil
+# End time: 22:42:33 on Nov 16,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 3
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 22:42:33 on Nov 16,2024
+# vlog -reportprogress 300 -sv ../sim/xpm_memory.sv 
+# -- Compiling module xpm_memory_base
+# -- Compiling module asym_bwe_bb
+# -- Compiling module xpm_memory_dpdistram
+# -- Compiling module xpm_memory_dprom
+# -- Compiling module xpm_memory_sdpram
+# -- Compiling module xpm_memory_spram
+# -- Compiling module xpm_memory_sprom
+# -- Compiling module xpm_memory_tdpram
+# 
+# Top level modules:
+# 	xpm_memory_dpdistram
+# 	xpm_memory_dprom
+# 	xpm_memory_sdpram
+# 	xpm_memory_spram
+# 	xpm_memory_sprom
+# 	xpm_memory_tdpram
+# End time: 22:42:33 on Nov 16,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 22:42:34 on Nov 16,2024
+# vlog -reportprogress 300 -sv ../sim/xpm_cdc.sv 
+# -- Compiling module xpm_cdc_single
+# -- Compiling module xpm_cdc_gray
+# -- Compiling module xpm_cdc_handshake
+# -- Compiling module xpm_cdc_pulse
+# -- Compiling module xpm_cdc_array_single
+# -- Compiling module xpm_cdc_sync_rst
+# -- Compiling module xpm_cdc_async_rst
+# -- Compiling module xpm_cdc_low_latency_handshake
+# 
+# Top level modules:
+# 	xpm_cdc_gray
+# 	xpm_cdc_handshake
+# 	xpm_cdc_pulse
+# 	xpm_cdc_array_single
+# 	xpm_cdc_sync_rst
+# 	xpm_cdc_async_rst
+# 	xpm_cdc_low_latency_handshake
+# End time: 22:42:34 on Nov 16,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim SE-64 vlog 2020.4 Compiler 2020.10 Oct 13 2020
+# Start time: 22:42:34 on Nov 16,2024
+# vlog -reportprogress 300 -work work ../sim/glbl.v 
+# -- Compiling module glbl
+# 
+# Top level modules:
+# 	glbl
+# End time: 22:42:34 on Nov 16,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vsim -t ps "+notimingchecks" -gui -voptargs=""+acc"" work.glbl work.tb_async_fifo 
+# Start time: 22:42:34 on Nov 16,2024
 # ** Note: (vsim-3813) Design is being optimized due to module recompilation...
-# Loading work.tb_spi(fast)
-# Loading work.SPI(fast)
-# Loading work.spi_slave(fast)
-# Loading work.sync_fifo(fast)
+# ** Warning: ../sim/tb_async_fifo.v(235): (vopt-2685) [TFMPC] - Too few port connections for 'u_async_fifo'.  Expected 24, found 22.
+# ** Warning: ../sim/tb_async_fifo.v(235): (vopt-2718) [TFMPC] - Missing connection for port 'dbiterr'.
+# ** Warning: ../sim/tb_async_fifo.v(235): (vopt-2718) [TFMPC] - Missing connection for port 'sbiterr'.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=3.
+# Loading work.glbl(fast)
+# Loading work.tb_async_fifo(fast)
+# Loading work.async_fifo(fast)
 # Loading work.DPRAM(fast)
-# ** Warning: (vsim-3015) [PCDPC] - Port size (552) does not match connection size (8) for port 'rx_data'. The port definition is at: ../src/Interface/SPI.v(64).
-#    Time: 0 ps  Iteration: 0  Instance: /tb_spi/u_SPI File: ../sim/tb_spi.v Line: 281
-add wave -position insertpoint  \
-sim:/tb_spi/u_spi_slave/spi_sclk
-restart
-# Closing VCD file "wave.vcd"
-# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
-# ** Note: (vsim-8009) Loading existing optimized design _opt2
-# Loading work.tb_spi(fast)
-# Loading work.SPI(fast)
-# Loading work.spi_slave(fast)
-# Loading work.sync_fifo(fast)
-# Loading work.DPRAM(fast)
-# ** Warning: (vsim-3015) [PCDPC] - Port size (552) does not match connection size (8) for port 'rx_data'. The port definition is at: ../src/Interface/SPI.v(64).
-#    Time: 0 ps  Iteration: 0  Instance: /tb_spi/u_SPI File: ../sim/tb_spi.v Line: 281
-run 3ms
-# Causality operation skipped due to absence of debug database file
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-# Error: invalid command name "::.main_pane.dataflow.interior.cs.body.pw.df.c"
-add wave -position insertpoint  \
-sim:/tb_spi/u_spi_slave/sample_edge
-add wave -position insertpoint  \
-sim:/tb_spi/u_spi_slave/toggle_edge
-restart
-# Closing VCD file "wave.vcd"
-# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
-# ** Note: (vsim-8009) Loading existing optimized design _opt2
-# Loading work.tb_spi(fast)
-# Loading work.SPI(fast)
-# Loading work.spi_slave(fast)
-# Loading work.sync_fifo(fast)
-# Loading work.DPRAM(fast)
-# ** Warning: (vsim-3015) [PCDPC] - Port size (552) does not match connection size (8) for port 'rx_data'. The port definition is at: ../src/Interface/SPI.v(64).
-#    Time: 0 ps  Iteration: 0  Instance: /tb_spi/u_SPI File: ../sim/tb_spi.v Line: 281
-run 3ms
-# End time: 18:53:26 on Oct 27,2024, Elapsed time: 7:19:12
-# Errors: 0, Warnings: 1
+# Loading work.glbl(fast__1)
+# Loading sv_std.std
+# Loading work.xpm_fifo_async(fast)
+# Loading work.xpm_fifo_base(fast)
+# Loading work.xpm_fifo_rst(fast)
+# Loading work.xpm_cdc_sync_rst(fast)
+# Loading work.xpm_cdc_sync_rst(fast__1)
+# Loading work.xpm_fifo_reg_bit(fast)
+# Loading work.xpm_counter_updn(fast)
+# Loading work.xpm_counter_updn(fast__1)
+# Loading work.xpm_counter_updn(fast__2)
+# Loading work.xpm_counter_updn(fast__3)
+# Loading work.xpm_counter_updn(fast__4)
+# Loading work.xpm_counter_updn(fast__5)
+# Loading work.xpm_counter_updn(fast__6)
+# Loading work.xpm_memory_base(fast)
+# Loading work.xpm_fifo_reg_vec(fast)
+# Loading work.xpm_fifo_reg_vec(fast__1)
+# Loading work.xpm_fifo_reg_vec(fast__2)
+# Loading work.xpm_fifo_reg_vec(fast__3)
+# ** Warning: (vsim-3015) [PCDPC] - Port size (6) does not match connection size (11) for port 'wr_data_count'. The port definition is at: ../sim/xpm_fifo.sv(2051).
+#    Time: 0 ps  Iteration: 0  Instance: /tb_async_fifo/u_xpm_fifo_async File: ../sim/tb_async_fifo.v Line: 287
+# ** Warning: (vsim-3015) [PCDPC] - Port size (4) does not match connection size (11) for port 'rd_data_count'. The port definition is at: ../sim/xpm_fifo.sv(2063).
+#    Time: 0 ps  Iteration: 0  Instance: /tb_async_fifo/u_xpm_fifo_async File: ../sim/tb_async_fifo.v Line: 287
+# 0123	   0	    Z
+# 0224	   0	    Z
+# 0325	   1	    Z
+# 0426	   2	    Z
+# 0527	   3	    Z
+# 0628	   4	    Z
+# 0729	   5	    Z
+# 082a	   6	    Z
+# 092b	   7	    Z
+# 0a2c	   8	    Z
+# 0426032502240123	  1	                    0   Z
+# 0b2d	   9	    Z
+# 0c2e	  10	    Z
+# 0426032502240123	  1	                    0   Z
+# 0d2f	  11	    Z
+# 0e30	  12	    Z
+# 0426032502240123	  2	                    0   Z
+# 0f31	  13	    Z
+# 1032	  14	    Z
+# 0426032502240123	  2	                    0   Z
+# 1133	  15	    Z
+# 1234	  16	    Z
+# 0426032502240123	  3	                    0   Z
+# 1335	  17	    Z
+# 1436	  18	    Z
+# 0426032502240123	  3	                    0   Z
+# 1537	  19	    Z
+# 1638	  20	    Z
+# 0426032502240123	  4	                    0   Z
+# 1739	  21	    Z
+# 183a	  22	    Z
+# 0426032502240123	  4	                    0   Z
+# 193b	  23	    Z
+# 1a3c	  24	    Z
+# 0426032502240123	  5	                    0   Z
+# 1b3d	  25	    Z
+# 1c3e	  26	    Z
+# 0426032502240123	  5	                    0   Z
+# 1d3f	  27	    Z
+# 1e40	  28	    Z
+# 0426032502240123	  6	                    0   Z
+# 1f41	  29	    Z
+# 2042	  30	    Z
+# 0426032502240123	  6	                    0   Z
+# 2143	  31	    Z
+# 2244	  32	    Z
+# 0426032502240123	  7	                    0   Z
+# 2345	  33	    Z
+# 2446	  34	    Z
+# 0426032502240123	  7	                    0   Z
+# 2547	  35	    Z
+# 2648	  36	    Z
+# 0426032502240123	  8	                    0   Z
+# 2749	  37	    Z
+# 284a	  38	    Z
+# 0426032502240123	  8	                    0   Z
+# 294b	  39	    Z
+# 2a4c	  40	    Z
+# 0426032502240123	  9	                    0   Z
+# 2b4d	  41	    Z
+# 2c4e	  42	    Z
+# 0426032502240123	  9	                    0   Z
+# 2d4f	  43	    Z
+# 2e50	  44	    Z
+# 0426032502240123	 10	                    0   Z
+# 2f51	  45	    Z
+# 3052	  46	    Z
+# 0426032502240123	 10	                    0   Z
+# 3153	  47	    Z
+# 3254	  48	    Z
+# 0426032502240123	 11	                    0   Z
+# 3355	  49	    Z
+# 3456	  50	    Z
+# 0426032502240123	 11	                    0   Z
+# 3557	  51	    Z
+# 3658	  52	    Z
+# 0426032502240123	 12	                    0   Z
+# 3759	  53	    Z
+# 385a	  54	    Z
+# 0426032502240123	 12	                    0   Z
+# 395b	  55	    Z
+# 3a5c	  56	    Z
+# 0426032502240123	 13	                    0   Z
+# 3b5d	  57	    Z
+# 3c5e	  58	    Z
+# 0426032502240123	 13	                    0   Z
+# 3d5f	  59	    Z
+# 3e60	  60	    Z
+# 0426032502240123	 14	                    0   Z
+# 3f61	  61	    Z
+# 4062	  62	    Z
+# 0426032502240123	 14	                    0   Z
+# 0426032502240123	 15	                    0   Z
+# 0426032502240123	 15	                    0   Z
+# 0426032502240123	 16	                    0   Z
+# 0426032502240123	 16	                    0   Z
+# 0426032502240123	 16	                    0   Z
+# 0426032502240123	 16	                    0   Z
+# 0426032502240123	 16	                    0   Z
+# 0426032502240123	 16	                    0   Z
+# 0426032502240123	 16	                    0   Z
+# 082a072906280527	 15	  3192536796274370891   Z
+# 0c2e0b2d0a2c092b	 14	  3481897487626677583   Z
+# 10320f310e300d2f	 13	  3771258178978984275   Z
+# 1436133512341133	 12	  4060618870331290967   Z
+# 183a173916381537	 11	  4349979561683597659   Z
+# 1c3e1b3d1a3c193b	 10	  4639340253035904351   Z
+# 20421f411e401d3f	  9	  4928700944388211043   Z
+# 2446234522442143	  8	  4928700944388211043   Z
+# 284a274926482547	  7	  4928700944388211043   Z
+# 2c4e2b4d2a4c294b	  6	  4928700944388211043   Z
+# 30522f512e502d4f	  5	  4928700944388211043   Z
+# 3456335532543153	  4	  4928700944388211043   Z
+# 385a375936583557	  3	  4928700944388211043   Z
+# 3c5e3b5d3a5c395b	  2	  4928700944388211043   Z
+# End time: 22:42:54 on Nov 16,2024, Elapsed time: 0:00:20
+# Errors: 0, Warnings: 5

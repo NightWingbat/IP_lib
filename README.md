@@ -33,3 +33,7 @@
 ## 0.0.3
 
 1. Complete the joint debugging of ELITESTEK hyper_ram IP and spi_Slave, and be able to achieve CH347 data loop through hyper_ram
+
+## 0.0.4
+
+1. Complete the modification of asynchronous FIFO in reset release, read/write counting, and additional signals, and adopt the binary counter to Gray code conversion method again
