@@ -1,3 +1,25 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 2024/11/27 20:41:01
+// Design Name: 
+// Module Name: TEST
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
 `timescale 1 ns / 1 ns
 
 /*
@@ -296,10 +318,10 @@ endgenerate
 //assign valid = (reset) ? 1'b0 :  ~empty_d1;
 generate if(MODE == "FWFT") begin : fwft_mode_read
 
+always @(*) begin
 
-    assign  valid = ~empty_d1;
-   
-
+        valid = ~empty_d1;
+    end
 end
 endgenerate
 
@@ -442,49 +464,59 @@ generate if(INPUT_WIDTH >= OUTPUT_WIDTH) begin : BIG_TO_SMALL_RAM
     case(RAM_NUM)
         4'd1:begin
             if(ECC_MODE == "no_ecc")begin
-                dout = ram_rd_data;
+             always @(*) begin
+                    dout = ram_rd_data;
+                end
             end
             else if(ECC_MODE == "en_ecc")begin
-                dout = decode_data;
+              always @(*) begin
+                    dout = decode_data;
+                end
             end
         end
 
         4'd2:begin
-            case(ram_sel)
-                2'b01 : dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
-                2'b10 : dout = ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
-                default:begin
-                    dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
-                end
-            endcase
+            always @(*) begin
+                case(ram_sel)
+                    2'b01 : dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
+                    2'b10 : dout = ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
+                    default:begin
+                        dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
+                    end
+                endcase
+            end
         end
         
         4'd4:begin
-            case(ram_sel)
-                4'b0001 : dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
-                4'b0010 : dout = ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
-                4'b0100 : dout = ram_rd_data[OUTPUT_WIDTH * 3 - 1 : OUTPUT_WIDTH * 2];
-                4'b1000 : dout = ram_rd_data[OUTPUT_WIDTH * 4 - 1 : OUTPUT_WIDTH * 3];
-                default : begin
-                          dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
-                end
-            endcase
+            always @(*) begin
+                case(ram_sel)
+                    4'b0001 : dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
+                    4'b0010 : dout = ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
+                    4'b0100 : dout = ram_rd_data[OUTPUT_WIDTH * 3 - 1 : OUTPUT_WIDTH * 2];
+                    4'b1000 : dout = ram_rd_data[OUTPUT_WIDTH * 4 - 1 : OUTPUT_WIDTH * 3];
+                    default : begin
+                              dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
+                    end
+                endcase
+            end
         end
           
         4'd8:begin
-            case(ram_sel)
-                8'b0000_0001 : dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
-                8'b0000_0010 : dout = ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
-                8'b0000_0100 : dout = ram_rd_data[OUTPUT_WIDTH * 3 - 1 : OUTPUT_WIDTH * 2];
-                8'b0000_1000 : dout = ram_rd_data[OUTPUT_WIDTH * 4 - 1 : OUTPUT_WIDTH * 3];
-                8'b0001_0000 : dout = ram_rd_data[OUTPUT_WIDTH * 5 - 1 : OUTPUT_WIDTH * 4];
-                8'b0010_0000 : dout = ram_rd_data[OUTPUT_WIDTH * 6 - 1 : OUTPUT_WIDTH * 5];
-                8'b0100_0000 : dout = ram_rd_data[OUTPUT_WIDTH * 7 - 1 : OUTPUT_WIDTH * 6];
-                8'b1000_0000 : dout = ram_rd_data[OUTPUT_WIDTH * 8 - 1 : OUTPUT_WIDTH * 7];
-                default:begin
-                               dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
-                end
-            endcase
+            always @(*) begin
+                case(ram_sel)
+                    8'b0000_0001 : dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
+                    8'b0000_0010 : dout = ram_rd_data[OUTPUT_WIDTH * 2 - 1 : OUTPUT_WIDTH];
+                    8'b0000_0100 : dout = ram_rd_data[OUTPUT_WIDTH * 3 - 1 : OUTPUT_WIDTH * 2];
+                    8'b0000_1000 : dout = ram_rd_data[OUTPUT_WIDTH * 4 - 1 : OUTPUT_WIDTH * 3];
+                    8'b0001_0000 : dout = ram_rd_data[OUTPUT_WIDTH * 5 - 1 : OUTPUT_WIDTH * 4];
+                    8'b0010_0000 : dout = ram_rd_data[OUTPUT_WIDTH * 6 - 1 : OUTPUT_WIDTH * 5];
+                    8'b0100_0000 : dout = ram_rd_data[OUTPUT_WIDTH * 7 - 1 : OUTPUT_WIDTH * 6];
+                    8'b1000_0000 : dout = ram_rd_data[OUTPUT_WIDTH * 8 - 1 : OUTPUT_WIDTH * 7];
+                    default:begin
+                                   dout = ram_rd_data[OUTPUT_WIDTH - 1 : 0];
+                    end
+                endcase
+            end
         end
     endcase
 
@@ -589,7 +621,9 @@ generate if(INPUT_WIDTH < OUTPUT_WIDTH) begin : SMALL_TO_BIG_RAM
         assign ram_rd_addr = rd_ptr;
     end
     else if(MODE == "FWFT")begin
-        assign ram_rd_addr = rd_ptr_fwft;
+        always @(*) begin
+            rd_ptr_fwft;
+        end
     end
 
     //rd_addr
@@ -717,8 +751,9 @@ endgenerate
 
 generate if(USE_ADV_FEATURES[0] == 1'b0) begin : OVERFLOW_DISABLE
     
-    assign overflow = 1'b0;
-
+    always @(*) begin
+        overflow = 1'b0;
+    end
 end
 endgenerate
 
@@ -742,8 +777,9 @@ endgenerate
 
 generate if(USE_ADV_FEATURES[8] == 1'b0) begin : UNDERFLOW_DISABLE
     
-    assign underflow = 1'b0;
-
+    always @(*) begin
+        underflow = 1'b0;
+    end
 
 end
 endgenerate

@@ -267,21 +267,18 @@ end
 
 //when in fwft mode,the change of ram_address need to use rd_ptr_fwft
 always @(*) begin
-    if(rd_rst == 1'b1)begin
-        rd_ptr_fwft <= 'd0;
-    end
     //when reading formally,rd_ptr need to add one to pre-extract from fifo
-    else if(rd_en)begin
-        rd_ptr_fwft <= rd_ptr_next;
+    if(rd_en)begin
+        rd_ptr_fwft = rd_ptr_next;
     end
     else begin
         //before formal reading after pre reading,read pre fetched data from FIFO
         if(pre_valid)begin
-            rd_ptr_fwft <= rd_ptr_pre;
+            rd_ptr_fwft = rd_ptr_pre;
         end
         //When it is not officially read and the FIFO is not empty, there is no need to read it in advance
         else begin
-            rd_ptr_fwft <= rd_ptr_next;
+            rd_ptr_fwft = rd_ptr_next;
         end
     end
 end
@@ -317,9 +314,10 @@ endgenerate
 
 generate if(MODE == "FWFT") begin : fwft_mode_read
 
-  
-        assign valid <= ~empty_d1;
+    always @(*) begin
+        valid = ~empty_d1;
     end
+end
  
 endgenerate
 
@@ -633,8 +631,9 @@ generate if(INPUT_WIDTH < OUTPUT_WIDTH) begin : SMALL_TO_BIG_RAM
     end
 
     //rd_data
-    
-    assign dout = ram_rd_data;
+     always @(*) begin
+        dout = ram_rd_data;
+     end
 
 
     //wr_data_count
@@ -858,7 +857,7 @@ endgenerate
 generate if(USE_ADV_FEATURES[8] == 1'b0) begin : UNDERFLOW_DISABLE
     
     always @(*) begin
-        underflow <= 1'b0;
+        underflow = 1'b0;
     end
 
 end
